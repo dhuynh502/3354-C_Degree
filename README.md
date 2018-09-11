@@ -1,2 +1,2 @@
-# Duc-Huynh_Michael-Kelley_Kristie-Niemiec_Jay
+# C_Degree
 ECS 3354 Group Project
