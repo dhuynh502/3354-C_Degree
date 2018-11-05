@@ -5,9 +5,25 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "event", indices = {@Index("eventId"), @Index("event_unixtime")})
 public class Event {
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "event_id")
+    private int eventId;
+    @ColumnInfo(name = "event_unixtime")
     private Instant dateTime;
+    @ColumnInfo(name = "duration")
     private Duration duration;
+    @ColumnInfo(name = "primary_category_id")
+    @ForeignKey(entity = EventCategory.class,
+            parentColumns = "category_id",
+            childColumns = "primary_category_id")
     private EventCategory primaryEventCategory;
     private List<EventCategory> eventCategories;
 
@@ -39,6 +55,14 @@ public class Event {
 
     public List<EventCategory> getEventCategories() {
         return eventCategories;
+    }
+
+    public int getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(int eventId) {
+        this.eventId = eventId;
     }
 
     public EventCategory getPrimaryEventCategory() {
