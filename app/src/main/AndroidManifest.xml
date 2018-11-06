@@ -17,7 +17,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".MonthViewActivity" />
-        <activity android:name=".CreateEventActivity"></activity>
+        <activity android:name=".CreateEventActivity" />
+        <activity android:name=".EventListActivity"></activity>
     </application>
 
 </manifest>

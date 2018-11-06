@@ -1,6 +1,5 @@
 package net.minthe.calendarapp.domain;
 
-import java.time.Duration;
 import java.util.Date;
 
 import androidx.room.ColumnInfo;
@@ -15,6 +14,8 @@ public class Event {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "event_id")
     private long eventId;
+    @ColumnInfo(name = "event_name")
+    String eventName;
     @ColumnInfo(name = "event_unixtime")
     private Date dateTime;
     @ColumnInfo(name = "duration")
@@ -27,7 +28,8 @@ public class Event {
             childColumns = "primary_category_id")
     private long primaryEventCategory;
 
-    public Event(Date dateTime, long duration, String notes, long primaryEventCategory) {
+    public Event(String eventName, Date dateTime, long duration, String notes, long primaryEventCategory) {
+        this.eventName = eventName;
         this.dateTime = dateTime;
         this.duration = duration;
         this.notes = notes;
@@ -35,7 +37,8 @@ public class Event {
     }
 
     @Ignore
-    public Event(Date dateTime, long duration, String notes) {
+    public Event(String eventName, Date dateTime, long duration, String notes) {
+        this.eventName = eventName;
         this.dateTime = dateTime;
         this.duration = duration;
         this.notes = notes;
@@ -60,6 +63,14 @@ public class Event {
 
     public void setPrimaryEventCategory(long primaryEventCategory) {
         this.primaryEventCategory = primaryEventCategory;
+    }
+
+    public String getEventName() {
+        return eventName;
+    }
+
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
     }
 
     public String getNotes() {

@@ -1,6 +1,5 @@
 package net.minthe.calendarapp.domain;
 
-import java.time.Instant;
 import java.util.List;
 
 import androidx.room.Dao;
@@ -18,6 +17,12 @@ public interface EventDao {
     @Query("SELECT * FROM event " +
             "WHERE event_id = :event_id")
     Event findByID(long event_id);
+
+    @Query("SELECT COUNT(*) from event")
+    long getCount();
+
+    @Query("SELECT * FROM event")
+    List<Event> getAll();
 
     @Insert
     void insertAll(Event... events);

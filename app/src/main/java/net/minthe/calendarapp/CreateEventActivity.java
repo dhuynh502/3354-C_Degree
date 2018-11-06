@@ -1,9 +1,8 @@
 package net.minthe.calendarapp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -20,6 +19,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class CreateEventActivity extends AppCompatActivity {
     EditText eventName;
@@ -99,7 +100,7 @@ public class CreateEventActivity extends AppCompatActivity {
         long startSecondsFromMidnight = cal.get(Calendar.HOUR) * 60 * 60 + cal.get(Calendar.MINUTE) * 60;
 
         cal.setTime(endDate);
-        long endSecondsFromMidnight = cal.get(Calendar.HOUR) * 60 * 60  + cal.get(Calendar.MINUTE) * 60;
+        long endSecondsFromMidnight = cal.get(Calendar.HOUR) * 60 * 60 + cal.get(Calendar.MINUTE) * 60;
 
         if (endSecondsFromMidnight <= startSecondsFromMidnight) {
             endTime.setBackgroundColor(Color.RED);
@@ -107,25 +108,23 @@ public class CreateEventActivity extends AppCompatActivity {
         }
         long duration = endSecondsFromMidnight - startSecondsFromMidnight;
 
-        Event e = new Event(
-                new Date(date),
-                duration,
-                notes.getText().toString()
-        );
-
-        new EventInsertionTask(this, new Date(date), duration, notes.getText().toString()).execute();
+        new EventInsertionTask(this, eventName.getText().toString(), new Date(date + startSecondsFromMidnight * 1000), duration, notes.getText().toString()).execute();
+        Intent backtoMain = new Intent(this, MainActivity.class);
+        startActivity(backtoMain);
     }
 
     // Android forbids database insertion in the main thread, and we're using Java 7, so
     // enjoy this abomination
     private static class EventInsertionTask extends AsyncTask<Void, Void, Void> {
         private WeakReference<Activity> activity;
+        private String eventName;
         private Date date;
         private long duration;
         private String notes;
 
-        public EventInsertionTask(Activity activity, Date date, long duration, String notes) {
+        public EventInsertionTask(Activity activity, String eventName, Date date, long duration, String notes) {
             this.activity = new WeakReference<>(activity);
+            this.eventName = eventName;
             this.date = date;
             this.duration = duration;
             this.notes = notes;
@@ -135,7 +134,7 @@ public class CreateEventActivity extends AppCompatActivity {
         protected Void doInBackground(Void... voids) {
             EventDao eventDao = AppDatabase.getInstance().eventDao();
             eventDao.insertAll(new Event(
-                    date, duration, notes
+                    eventName, date, duration, notes
             ));
             return null;
         }

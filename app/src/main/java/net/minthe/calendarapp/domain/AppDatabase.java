@@ -7,7 +7,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
-@Database(entities = {Event.class, EventCategory.class, EventEventCategories.class}, version = 1)
+@Database(entities = {Event.class, EventCategory.class, EventEventCategories.class}, version = 2)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase ourInstance = null;
@@ -19,7 +19,9 @@ public abstract class AppDatabase extends RoomDatabase {
     public static void instantiate(Context context) {
         if (ourInstance != null) return;
 
-        ourInstance = Room.databaseBuilder(context, AppDatabase.class, "event-db").build();
+        ourInstance = Room.databaseBuilder(context, AppDatabase.class, "event-db")
+                .allowMainThreadQueries()
+                .build();
     }
 
     public AppDatabase() {
