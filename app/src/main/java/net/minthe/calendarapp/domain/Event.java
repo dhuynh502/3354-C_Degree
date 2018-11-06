@@ -1,91 +1,88 @@
 package net.minthe.calendarapp.domain;
 
 import java.time.Duration;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "event", indices = {@Index("eventId"), @Index("event_unixtime")})
+@Entity(tableName = "event", indices = {@Index("event_id"), @Index("event_unixtime")})
 public class Event {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "event_id")
-    private int eventId;
+    private long eventId;
     @ColumnInfo(name = "event_unixtime")
-    private Instant dateTime;
+    private Date dateTime;
     @ColumnInfo(name = "duration")
-    private Duration duration;
+    private long duration;
+    @ColumnInfo(name = "notes")
+    private String notes;
     @ColumnInfo(name = "primary_category_id")
     @ForeignKey(entity = EventCategory.class,
             parentColumns = "category_id",
             childColumns = "primary_category_id")
-    private EventCategory primaryEventCategory;
-    private List<EventCategory> eventCategories;
+    private long primaryEventCategory;
 
-    public Event(Instant dateTime, Duration duration, EventCategory primaryEventCategory, List<EventCategory> eventCategories) {
+    public Event(Date dateTime, long duration, String notes, long primaryEventCategory) {
         this.dateTime = dateTime;
         this.duration = duration;
+        this.notes = notes;
         this.primaryEventCategory = primaryEventCategory;
-        this.eventCategories = eventCategories;
     }
 
-    public Event(Instant dateTime, Duration duration) {
+    @Ignore
+    public Event(Date dateTime, long duration, String notes) {
         this.dateTime = dateTime;
         this.duration = duration;
-        this.primaryEventCategory = null;
-        this.eventCategories = new ArrayList<>();
-    }
-
-    public void addEventCategory(EventCategory category) {
-        eventCategories.add(category);
-    }
-
-    public void removeEventCategory(EventCategory category) {
-        eventCategories.remove(category);
+        this.notes = notes;
+        this.primaryEventCategory = -1;
     }
 
     public boolean isPeriodic() {
         return false;
     }
 
-    public List<EventCategory> getEventCategories() {
-        return eventCategories;
-    }
-
-    public int getEventId() {
+    public long getEventId() {
         return eventId;
     }
 
-    public void setEventId(int eventId) {
+    public void setEventId(long eventId) {
         this.eventId = eventId;
     }
 
-    public EventCategory getPrimaryEventCategory() {
+    public long getPrimaryEventCategory() {
         return primaryEventCategory;
     }
 
-    public void setPrimaryEventCategory(EventCategory primaryEventCategory) {
+    public void setPrimaryEventCategory(long primaryEventCategory) {
         this.primaryEventCategory = primaryEventCategory;
     }
 
-    public Instant getDateTime() {
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public Date getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(Instant dateTime) {
+    public void setDateTime(Date dateTime) {
         this.dateTime = dateTime;
     }
 
-    public Duration getDuration() {
+    public long getDuration() {
         return duration;
     }
 
-    public void setDuration(Duration duration) {
+    public void setDuration(long duration) {
         this.duration = duration;
     }
 }

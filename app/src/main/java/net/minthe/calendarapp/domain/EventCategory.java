@@ -18,9 +18,9 @@ public class EventCategory {
     @ColumnInfo(name = "category_name")
     private String categoryName;
     @ColumnInfo(name = "color")
-    private Color color;
+    private int color;
 
-    public EventCategory(String categoryName, Color color) {
+    public EventCategory(String categoryName, int color) {
         this.categoryName = categoryName;
         this.color = color;
     }
@@ -33,11 +33,11 @@ public class EventCategory {
         this.categoryName = categoryName;
     }
 
-    public Color getColor() {
+    public int getColor() {
         return color;
     }
 
-    public void setColor(Color color) {
+    public void setColor(int color) {
         this.color = color;
     }
 
@@ -61,7 +61,6 @@ public class EventCategory {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(categoryId, categoryName, color);
     }
 
