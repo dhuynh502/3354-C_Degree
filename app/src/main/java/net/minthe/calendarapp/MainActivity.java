@@ -23,4 +23,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, EventListActivity.class);
         startActivity(intent);
     }
+
+    public void onCustomMonthView(View view) {
+        Intent intent = new Intent(this, CustomMonthView.class);
+        startActivity(intent);
+    }
 }
