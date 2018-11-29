@@ -19,7 +19,8 @@
         <activity android:name=".MonthViewActivity" />
         <activity android:name="DailyViewActivity" />
         <activity android:name=".CreateEventActivity" />
-        <activity android:name=".EventListActivity"></activity>
+        <activity android:name=".EventListActivity" />
+        <activity android:name=".CustomMonthView"></activity>
     </application>
 
 </manifest>
