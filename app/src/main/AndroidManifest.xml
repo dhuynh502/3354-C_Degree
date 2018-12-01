@@ -17,10 +17,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".MonthViewActivity" />
-        <activity android:name="DailyViewActivity" />
+        <activity android:name=".DailyViewActivity" />
         <activity android:name=".CreateEventActivity" />
         <activity android:name=".EventListActivity" />
-        <activity android:name=".CustomMonthView"></activity>
+        <activity android:name=".CustomMonthView" />
+        <activity android:name=".WeekView"></activity>
     </application>
 
 </manifest>
