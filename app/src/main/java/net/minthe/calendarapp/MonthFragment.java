@@ -1,5 +1,6 @@
 package net.minthe.calendarapp;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -127,6 +128,9 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
 
         TableLayout layout = this.getView().findViewById(R.id.monthTableLayout);
         layout.removeAllViewsInLayout();
+
+        EventListDetails listDetails = new EventListDetails(date, mViewModel.eventList.getValue());
+
         for (int i = 0; i < 6; i++) {
             TableRow row = new TableRow(layout.getContext());
             for (int j = 0; j < 7; j++) {
@@ -135,6 +139,11 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
                 if ((i != 0 || j >= firstDay) && i * 7 + j - firstDay < numDays) {
                     text.setText(String.valueOf(day) + " ");
                 }
+
+                if (!listDetails.getEventsForDay(day - 1).isEmpty()) {
+                    text.setBackgroundColor(Color.RED);
+                }
+
                 text.setMinEms(3);
                 text.setMinHeight(100);
                 row.addView(text);
