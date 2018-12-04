@@ -10,6 +10,8 @@ import net.minthe.calendarapp.domain.AppDatabase;
 import net.minthe.calendarapp.domain.Event;
 import net.minthe.calendarapp.domain.EventDao;
 
+import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -24,10 +26,15 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class EventFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
+    private static final String ARG_START_TIMESTAMP = "start-timestamp";
+    private static final String ARG_END_TIMESTAMP = "end-timestamp";
+
+
     private int mColumnCount = 1;
+    private long startTimestamp = 0;
+    private long endTimestamp = 15440835000000L; // arbitrary date in 2459
+
     private OnListFragmentInteractionListener mListener;
 
     /**
@@ -37,12 +44,13 @@ public class EventFragment extends Fragment {
     public EventFragment() {
     }
 
-    // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static EventFragment newInstance(int columnCount) {
+    public static EventFragment newInstance(int columnCount, long start, long end) {
         EventFragment fragment = new EventFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
+        args.putLong(ARG_START_TIMESTAMP, start);
+        args.putLong(ARG_END_TIMESTAMP, end);
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,6 +61,8 @@ public class EventFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            startTimestamp = getArguments().getLong(ARG_START_TIMESTAMP);
+            endTimestamp = getArguments().getLong(ARG_END_TIMESTAMP);
         }
     }
 
@@ -72,7 +82,14 @@ public class EventFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new EventRecyclerViewAdapter(eventDao.getAll(), mListener));
+
+            List<Event> eventsInRange = eventDao.findEventsBetween(startTimestamp, endTimestamp);
+
+            recyclerView.setAdapter(
+                    new EventRecyclerViewAdapter(
+                            eventsInRange,
+                            mListener)
+            );
         }
         return view;
     }
