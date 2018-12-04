@@ -61,7 +61,7 @@ public class CreateEventActivity extends AppCompatActivity {
                               }
 
                               // Displays formatted time in EditText box
-                              startTime.setText(String.format("%2d:%02d", hourOfDay, minute) + " " + amPm);
+                              startTime.setText(String.format("%2d:%02d", hourOfDay % 12, minute) + " " + amPm);
                           }
                       },0,0,false);
 
@@ -89,7 +89,7 @@ public class CreateEventActivity extends AppCompatActivity {
                         }
 
                         // Displays formatted time in EditText box
-                        endTime.setText(String.format("%2d:%02d", hourOfDay, minute) + " " + amPm);
+                        endTime.setText(String.format("%2d:%02d", hourOfDay % 12, minute) + " " + amPm);
                     }
                 },0,0,false);
 
@@ -147,9 +147,8 @@ public class CreateEventActivity extends AppCompatActivity {
             return;
         }
         AppDatabase.instantiate(view.getContext());
-        EventDao eventDao = AppDatabase.getInstance().eventDao();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aaa", Locale.US);
 
         Date startDate = null;
         Date endDate = null;
@@ -165,10 +164,10 @@ public class CreateEventActivity extends AppCompatActivity {
 
         Calendar cal = GregorianCalendar.getInstance();
         cal.setTime(startDate);
-        long startSecondsFromMidnight = cal.get(Calendar.HOUR) * 60 * 60 + cal.get(Calendar.MINUTE) * 60;
+        long startSecondsFromMidnight = cal.get(Calendar.HOUR_OF_DAY) * 60 * 60 + cal.get(Calendar.MINUTE) * 60;
 
         cal.setTime(endDate);
-        long endSecondsFromMidnight = cal.get(Calendar.HOUR) * 60 * 60 + cal.get(Calendar.MINUTE) * 60;
+        long endSecondsFromMidnight = cal.get(Calendar.HOUR_OF_DAY) * 60 * 60 + cal.get(Calendar.MINUTE) * 60;
 
         if (endSecondsFromMidnight <= startSecondsFromMidnight) {
             endTime.setBackgroundColor(Color.RED);
