@@ -1,12 +1,14 @@
 package net.minthe.calendarapp;
 
 import android.app.Activity;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TimePicker;
 
 import net.minthe.calendarapp.domain.AppDatabase;
 import net.minthe.calendarapp.domain.Event;
@@ -22,12 +24,15 @@ import java.util.Locale;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+// Class to handle event creation
 public class CreateEventActivity extends AppCompatActivity {
+    // Variables
     EditText eventName;
     EditText startTime;
     EditText endTime;
     EditText notes;
     long date;
+    String amPm;
 
     static SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.US);
 
@@ -38,17 +43,76 @@ public class CreateEventActivity extends AppCompatActivity {
 
         eventName = findViewById(R.id.eventName);
         startTime = findViewById(R.id.startTime);
+
+        // Shows TimePicker when user clicks the startTime EditText box
+        startTime.setOnClickListener(new View.OnClickListener() {
+                  @Override
+                  public void onClick(View view) {
+                      TimePickerDialog timePickerDialog = new TimePickerDialog(CreateEventActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                          @Override
+                          public void onTimeSet(TimePicker timepicker, int hourOfDay, int minute) {
+
+                              // Determines whether to display AM or PM
+                              if(hourOfDay >= 12)
+                              {
+                                  amPm = "PM";
+                              } else {
+                                  amPm = "AM";
+                              }
+
+                              // Displays formatted time in EditText box
+                              startTime.setText(String.format("%2d:%02d", hourOfDay, minute) + " " + amPm);
+                          }
+                      },0,0,false);
+
+                      // Displays the TimePicker window
+                      timePickerDialog.show();
+                  }
+        });
+
         endTime = findViewById(R.id.endTime);
+
+        // Shows TimePicker when user clicks the endTime EditText box
+        endTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(CreateEventActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timepicker, int hourOfDay, int minute) {
+
+                        // Determines whether to display AM or PM
+                        if(hourOfDay >= 12)
+                        {
+                            amPm = "PM";
+                        } else {
+                            amPm = "AM";
+                        }
+
+                        // Displays formatted time in EditText box
+                        endTime.setText(String.format("%2d:%02d", hourOfDay, minute) + " " + amPm);
+                    }
+                },0,0,false);
+
+                // Displays the TimePicker window
+                timePickerDialog.show();
+            }
+        });
+
         notes = findViewById(R.id.notes);
         date = getIntent().getLongExtra("NET_MINTHE_CALENDARAPP_SELECTED_DATE", 0);
     }
 
+    // Method to validate the user inputs to the event fields
     private boolean validate() {
         boolean valid = true;
+
+        // If the event name field is left blank then set the color to red; not valid
         if (eventName.getText().toString().isEmpty()) {
             eventName.setBackgroundColor(Color.RED);
             valid = false;
         }
+
+        // If the start time field is left blank then set the color to red; not valid
         if (startTime.getText().toString().isEmpty()) {
             startTime.setBackgroundColor(Color.RED);
             valid = false;
@@ -60,6 +124,8 @@ public class CreateEventActivity extends AppCompatActivity {
                 valid = false;
             }
         }
+
+        // If the end time field is left blank then set the color to red; not valid
         if (endTime.getText().toString().isEmpty()) {
             endTime.setBackgroundColor(Color.RED);
             valid = false;
@@ -71,6 +137,8 @@ public class CreateEventActivity extends AppCompatActivity {
                 valid = false;
             }
         }
+
+        // Otherwise the input is valid
         return valid;
     }
 
