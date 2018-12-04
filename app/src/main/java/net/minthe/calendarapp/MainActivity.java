@@ -14,11 +14,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    public void onMonthView(View view) {
-        Intent intent = new Intent(this, MonthViewActivity.class);
-        startActivity(intent);
-    }
-
     public void onEventList(View view) {
         Intent intent = new Intent(this, EventListActivity.class);
         startActivity(intent);
