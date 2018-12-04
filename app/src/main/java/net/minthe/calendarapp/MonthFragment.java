@@ -176,7 +176,7 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
 
         if (v.getTag() instanceof Integer) {
             int day = (int) v.getTag();
-            if (this.dateChangeListener != null) {
+            if (this.dateChangeListener != null && day > 0 && day <= numDays) {
                 MonthDetails md = new MonthDetails(date);
                 this.dateChangeListener.onDateChange(day, md);
             }

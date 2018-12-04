@@ -1,8 +1,7 @@
 package net.minthe.calendarapp;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import net.minthe.calendarapp.domain.Event;
 import net.minthe.calendarapp.domain.MonthDetails;
@@ -15,9 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 public class CustomMonthView extends AppCompatActivity
-        implements EventFragment.OnListFragmentInteractionListener,
-        View.OnClickListener {
-
+        implements EventFragment.OnListFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +41,10 @@ public class CustomMonthView extends AppCompatActivity
                 fm.beginTransaction()
                         .replace(R.id.monthEventFragContainer, eventFragment, "evFrag")
                         .commit();
+
+                TextView eventHeader = findViewById(R.id.eventHeader);
+                eventHeader.setText("Events on " + day + " " + md.getMonthName());
+
             }
         });
 
@@ -61,12 +62,4 @@ public class CustomMonthView extends AppCompatActivity
     public void onListFragmentInteraction(Event item) {
         // TODO: Switch to edit/delete screen
     }
-
-    @Override
-    public void onClick(View v) {
-        Toast toast = Toast.makeText(getApplicationContext(), "CLICK!", Toast.LENGTH_SHORT);
-        toast.show();
-    }
-
-
 }
