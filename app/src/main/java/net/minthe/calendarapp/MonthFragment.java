@@ -12,11 +12,8 @@ import android.widget.TextView;
 
 import net.minthe.calendarapp.domain.AppDatabase;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -85,36 +82,22 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
                 new Observer<Long>() {
                     @Override
                     public void onChanged(Long aLong) {
-                        Calendar c = GregorianCalendar.getInstance();
-                        c.clear();
-                        c.setTime(new Date(aLong));
-                        c.set(Calendar.DAY_OF_MONTH, 1);
-                        firstDay = c.get(Calendar.DAY_OF_WEEK) - 1;
 
-                        long start = c.getTimeInMillis();
-                        monthName = new SimpleDateFormat("MMMM YYYY", Locale.US)
-                                .format(c.getTime());
+                        MonthDetails monthDetails = new MonthDetails(aLong);
 
-                        c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
-                        c.set(Calendar.HOUR, 23);
-                        c.set(Calendar.MINUTE, 59);
-                        c.set(Calendar.SECOND, 0);
-                        long end = c.getTimeInMillis();
-                        numDays = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+                        firstDay = monthDetails.getFirstWeekDay();
+                        numDays = monthDetails.getNumDays();
 
+                        long start = monthDetails.getMonthStart();
+                        long end = monthDetails.getMonthEnd();
 
                         mViewModel.eventList.setValue(
                                 AppDatabase.getInstance().eventDao().findEventsBetween(start, end)
                         );
-                        c.clear();
-                        c.setTime(new Date(aLong));
-                        c.add(Calendar.MONTH, 1);
-                        nextMonth = c.getTimeInMillis();
 
-                        c.clear();
-                        c.setTime(new Date(aLong));
-                        c.add(Calendar.MONTH, -1);
-                        prevMonth = c.getTimeInMillis();
+                        nextMonth = monthDetails.getNextMonth().getDate();
+                        prevMonth = monthDetails.getPrevMonth().getDate();
+
                         redraw();
                     }
                 });
