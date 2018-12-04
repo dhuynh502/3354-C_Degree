@@ -85,7 +85,7 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
 
                         MonthDetails monthDetails = new MonthDetails(aLong);
 
-                        firstDay = monthDetails.getFirstWeekDay();
+                        firstDay = monthDetails.getFirstWeekday();
                         numDays = monthDetails.getNumDays();
 
                         long start = monthDetails.getMonthStart();
@@ -97,6 +97,7 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
 
                         nextMonth = monthDetails.getNextMonth().getDate();
                         prevMonth = monthDetails.getPrevMonth().getDate();
+                        monthName = monthDetails.getMonthName();
 
                         redraw();
                     }
@@ -112,7 +113,8 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
         TableLayout layout = this.getView().findViewById(R.id.monthTableLayout);
         layout.removeAllViewsInLayout();
 
-        EventListDetails listDetails = new EventListDetails(date, mViewModel.eventList.getValue());
+        long monthStart = new MonthDetails(date).getMonthStart();
+        EventListDetails listDetails = new EventListDetails(monthStart, mViewModel.eventList.getValue());
 
         for (int i = 0; i < 6; i++) {
             TableRow row = new TableRow(layout.getContext());
@@ -121,10 +123,10 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
                 TextView text = new TextView(row.getContext());
                 if ((i != 0 || j >= firstDay) && i * 7 + j - firstDay < numDays) {
                     text.setText(String.valueOf(day) + " ");
-                }
 
-                if (!listDetails.getEventsForDay(day - 1).isEmpty()) {
-                    text.setBackgroundColor(Color.RED);
+                    if (!listDetails.getEventsForDay(day - 1).isEmpty()) {
+                        text.setBackgroundColor(Color.RED);
+                    }
                 }
 
                 text.setMinEms(3);
@@ -147,7 +149,6 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        redraw();
     }
 
     @Override

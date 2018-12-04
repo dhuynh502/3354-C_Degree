@@ -42,6 +42,9 @@ public class MonthDetails {
         c.clear();
         c.setTime(new Date(date));
         c.set(Calendar.DAY_OF_MONTH, c.getActualMinimum(Calendar.DAY_OF_MONTH));
+        c.set(Calendar.HOUR, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
         return c.getTimeInMillis();
     }
 
@@ -71,7 +74,7 @@ public class MonthDetails {
     }
 
     /**
-     * @return String - The full month name and year, separated by a space.
+     * @return String - The full month name and year, separated by a space. e.g. "December 2012"
      */
     public String getMonthName() {
         return new SimpleDateFormat("MMMM YYYY", Locale.US)
@@ -81,7 +84,7 @@ public class MonthDetails {
     /**
      * @return int - zero-indexed day of the week on which the month begins.
      */
-    public int getFirstWeekDay() {
+    public int getFirstWeekday() {
         Calendar c = GregorianCalendar.getInstance();
         c.clear();
         c.setTime(new Date(date));

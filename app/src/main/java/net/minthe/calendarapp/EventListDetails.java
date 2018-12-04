@@ -14,6 +14,7 @@ public class EventListDetails {
         long startUnixTime = date;
         long endUnixTime;
 
+        eventsByDay = new HashMap<>();
 
         for (int i = 0; i < 31; i++) {
             endUnixTime = startUnixTime + 24 * 60 * 60 * 1000;
@@ -29,6 +30,8 @@ public class EventListDetails {
 
             startUnixTime = endUnixTime;
         }
+
+        System.out.println();
     }
 
     public List<Event> getEventsForDay(int day) {

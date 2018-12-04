@@ -12,7 +12,7 @@ public interface EventDao {
     @Query("SELECT * FROM event " +
             "WHERE event_unixtime BETWEEN :from and :to " +
             "OR (event_unixtime + duration) BETWEEN :from and :to")
-    List<Event> findEventsBetween(long to, long from);
+    List<Event> findEventsBetween(long from, long to);
 
     @Query("SELECT * FROM event " +
             "WHERE event_id = :event_id")
