@@ -109,6 +109,9 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
                     }
                 });
         mViewModel.date.setValue(date);
+        if (dateChangeListener != null) {
+            dateChangeListener.onDateChange(1, new MonthDetails(date));
+        }
     }
 
     private void redraw() {
@@ -168,9 +171,13 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.prevMonthButton:
                 prevMonth();
+                MonthDetails mdPrev = new MonthDetails(date);
+                this.dateChangeListener.onDateChange(1, mdPrev);
                 return;
             case R.id.nextMonthButton:
                 nextMonth();
+                MonthDetails mdNext = new MonthDetails(date);
+                this.dateChangeListener.onDateChange(1, mdNext);
                 return;
         }
 
