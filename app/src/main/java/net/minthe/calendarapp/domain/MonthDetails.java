@@ -92,6 +92,42 @@ public class MonthDetails {
         return c.get(Calendar.DAY_OF_WEEK) - 1;
     }
 
+    public int getYear() {
+        Calendar c = GregorianCalendar.getInstance();
+        c.clear();
+        c.setTime(new Date(date));
+        return c.get(Calendar.YEAR);
+    }
+
+    public int getMonth() {
+        Calendar c = GregorianCalendar.getInstance();
+        c.clear();
+        c.setTime(new Date(date));
+        return c.get(Calendar.MONTH);
+    }
+
+    public long getDayStart(int day) {
+        Calendar c = GregorianCalendar.getInstance();
+        c.clear();
+        c.setTime(new Date(date));
+        c.set(Calendar.DAY_OF_MONTH, day);
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        return c.getTimeInMillis();
+    }
+
+    public long getDayEnd(int day) {
+        Calendar c = GregorianCalendar.getInstance();
+        c.clear();
+        c.setTime(new Date(date));
+        c.set(Calendar.DAY_OF_MONTH, day);
+        c.set(Calendar.HOUR_OF_DAY, 23);
+        c.set(Calendar.MINUTE, 59);
+        c.set(Calendar.SECOND, 59);
+        return c.getTimeInMillis();
+    }
+
     /**
      * @return long - Some instant within the month, represented as milliseconds since
      * January 1, 1970.

@@ -36,9 +36,12 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
     private long prevMonth;
     private long nextMonth;
 
+    private DateChangeListener dateChangeListener;
+
     public MonthFragment() {
         // Best to leave this empty
     }
+
 
     @SuppressWarnings("unused")
     public static MonthFragment newInstance(long date) {
@@ -100,6 +103,7 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
                         nextMonth = monthDetails.getNextMonth().getDate();
                         prevMonth = monthDetails.getPrevMonth().getDate();
                         monthName = monthDetails.getMonthName();
+                        date = aLong;
 
                         redraw();
                     }
@@ -123,6 +127,8 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
             for (int j = 0; j < 7; j++) {
                 int day = i * 7 + j - firstDay + 1;
                 TextView text = new TextView(row.getContext());
+                text.setTag(Integer.valueOf(day));
+                text.setOnClickListener(this);
                 if ((i != 0 || j >= firstDay) && i * 7 + j - firstDay < numDays) {
                     text.setText(String.valueOf(day) + " ");
 
@@ -148,6 +154,10 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
         mViewModel.date.setValue(prevMonth);
     }
 
+    public void setDateChangeListener(DateChangeListener dateChangeListener) {
+        this.dateChangeListener = dateChangeListener;
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -158,10 +168,18 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.prevMonthButton:
                 prevMonth();
-                break;
+                return;
             case R.id.nextMonthButton:
                 nextMonth();
-                break;
+                return;
+        }
+
+        if (v.getTag() instanceof Integer) {
+            int day = (int) v.getTag();
+            if (this.dateChangeListener != null) {
+                MonthDetails md = new MonthDetails(date);
+                this.dateChangeListener.onDateChange(day, md);
+            }
         }
     }
 }
