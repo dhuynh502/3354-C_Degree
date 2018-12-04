@@ -38,11 +38,12 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
 
     @Override
     public void onBindViewHolder(final @NonNull ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).getEventName());
-        String content = mValues.get(position).getDateTime().toString() + ":"
-                + Long.toString(mValues.get(position).getDuration() / 60) + ":"
-                + mValues.get(position).getNotes();
+        Event event = mValues.get(position);
+        holder.mItem = event;
+        holder.mIdView.setText(event.getEventName());
+        String content = event.getDateTime().toString() + ":"
+                + Long.toString(event.getDuration() / 60) + ":"
+                + event.getNotes();
         holder.mContentView.setText(content);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
