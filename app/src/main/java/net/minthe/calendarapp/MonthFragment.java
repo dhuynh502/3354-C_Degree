@@ -11,6 +11,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import net.minthe.calendarapp.domain.AppDatabase;
+import net.minthe.calendarapp.domain.EventListDetails;
+import net.minthe.calendarapp.domain.MonthDetails;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;

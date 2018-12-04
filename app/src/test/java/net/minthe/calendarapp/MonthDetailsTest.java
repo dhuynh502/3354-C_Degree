@@ -1,5 +1,7 @@
 package net.minthe.calendarapp;
 
+import net.minthe.calendarapp.domain.MonthDetails;
+
 import org.junit.Test;
 
 import java.util.Calendar;

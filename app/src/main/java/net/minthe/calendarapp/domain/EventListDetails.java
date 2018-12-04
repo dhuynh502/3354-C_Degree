@@ -1,6 +1,4 @@
-package net.minthe.calendarapp;
-
-import net.minthe.calendarapp.domain.Event;
+package net.minthe.calendarapp.domain;
 
 import java.util.ArrayList;
 import java.util.HashMap;

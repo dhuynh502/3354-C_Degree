@@ -1,4 +1,4 @@
-package net.minthe.calendarapp;
+package net.minthe.calendarapp.domain;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
