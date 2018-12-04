@@ -114,6 +114,9 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    static final int N_ROWS = 6;
+    static final int N_COLS = 7;
+
     private void redraw() {
         TextView monthDate = this.getView().findViewById(R.id.monthDate);
         monthDate.setText(monthName);
@@ -125,14 +128,14 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
         long monthStart = new MonthDetails(date).getMonthStart();
         EventListDetails listDetails = new EventListDetails(monthStart, mViewModel.eventList.getValue());
 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < N_ROWS; i++) {
             TableRow row = new TableRow(layout.getContext());
-            for (int j = 0; j < 7; j++) {
-                int day = i * 7 + j - firstDay + 1;
+            for (int j = 0; j < N_COLS; j++) {
+                int day = i * N_COLS + j - firstDay + 1;
                 TextView text = new TextView(row.getContext());
                 text.setTag(Integer.valueOf(day));
                 text.setOnClickListener(this);
-                if ((i != 0 || j >= firstDay) && i * 7 + j - firstDay < numDays) {
+                if ((i != 0 || j >= firstDay) && i * N_COLS + j - firstDay < numDays) {
                     text.setText(String.valueOf(day) + " ");
 
                     if (!listDetails.getEventsForDay(day - 1).isEmpty()) {
