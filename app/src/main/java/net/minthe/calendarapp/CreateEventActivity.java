@@ -35,6 +35,8 @@ public class CreateEventActivity extends AppCompatActivity {
     EditText notes;
     long date;
     String amPm;
+    int hour;
+    int minutes;
 
     long id;
     boolean edit;
@@ -77,6 +79,9 @@ public class CreateEventActivity extends AppCompatActivity {
                             // Displays formatted time in EditText box
                             startTime.setText(String.format("%2d:%02d", hourOfDay % 12, minute) + " " + amPm);
                         }
+
+                        hour = hourOfDay;
+                        minutes = minute;
 
                     }
                 }, 0, 0, false);
@@ -216,6 +221,28 @@ public class CreateEventActivity extends AppCompatActivity {
         // Otherwise the input is valid
         return valid;
     }
+
+    private ScheduleClient scheduleClient;
+    scheduleClient.doBindService();
+
+    Calendar c = Calendar.getInstance();
+    c.set(year, month, date);
+    c.set(Calendar.HOUR_OF_DAY, hour);
+    c.set(Calendar.MINUTE, minutes);
+    c.set(Calendar.SECOND, 0);
+
+    scheduleClient.setAlarmForNotification(c);
+
+    @Override
+    protected void onStop() {
+        // When our activity is stopped ensure we also stop the connection to the service
+        // this stops us leaking our activity into the system *bad*
+        if(scheduleClient != null)
+            scheduleClient.doUnbindService();
+        super.onStop();
+    }
+
+
 
     public void handleDelete(View view) {
         EventDao eventDao = AppDatabase.getInstance().eventDao();
