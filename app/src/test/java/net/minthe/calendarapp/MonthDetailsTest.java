@@ -41,7 +41,6 @@ public class MonthDetailsTest {
 
     @Test
     public void testNumDays() {
-
     }
 
     @Test
@@ -52,5 +51,17 @@ public class MonthDetailsTest {
     @Test
     public void testPrevMonth() {
 
+    }
+    @Test
+    public void testMonth(){
+        final int[] years = {2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007};
+        //testing on MonthDetails.getMonth() function
+        Calendar c = GregorianCalendar.getInstance();
+        for (int i = 0; i < years.length; i++) {
+            c.clear();
+            c.set(Calendar.YEAR, years[i]);
+            MonthDetails md = new MonthDetails(c.getTimeInMillis());
+            assertEquals(years[i], md.getMonth());
+        }
     }
 }
