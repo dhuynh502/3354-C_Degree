@@ -31,14 +31,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <fragment
-            android:id="@+id/cmFragment"
-            android:name="net.minthe.calendarapp.MonthFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="0dp"
-            android:layout_weight="1" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -51,14 +43,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/monthFragContainer">
 
-        <fragment
-            android:id="@+id/mEventFragment"
-            android:name="net.minthe.calendarapp.EventFragment"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="0dp"
-            android:layout_weight="1"
-            android:tag="evFrag" />
     </LinearLayout>
 
     <Button
