@@ -157,8 +157,8 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
                 text.setOnClickListener(this);
                 if ((i != 0 || j >= firstDay) && i * N_COLS + j - firstDay < numDays) {
                     text.setText(String.valueOf(day) + " ");
-
-                    if (!listDetails.getEventsForDay(day - 1).isEmpty()) {
+                    //making the day with event turns red
+                    if (!listDetails.getEventsForDay(day - 1).isEmpty()) { //doing the day -1 because starts at 0 index
                         text.setBackgroundColor(Color.RED);
                     }
                 }

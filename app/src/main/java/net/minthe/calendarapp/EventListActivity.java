@@ -48,6 +48,7 @@ public class EventListActivity extends AppCompatActivity implements EventFragmen
 
     @Override
     public void onListFragmentInteraction(Event item) {
+        //creating calendar object here and setting the time starting at 0
         Calendar c = GregorianCalendar.getInstance();
         c.clear();
         c.setTime(item.getDateTime());
