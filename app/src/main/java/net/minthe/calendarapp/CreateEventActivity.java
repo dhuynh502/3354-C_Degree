@@ -23,6 +23,8 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 // Class to handle event creation
 public class CreateEventActivity extends AppCompatActivity {
@@ -106,24 +108,53 @@ public class CreateEventActivity extends AppCompatActivity {
 
         edit = getIntent().getBooleanExtra("NET_MINTHE_CALENDARAPP_EDIT_MODE", false);
         if (edit) {
-            id = getIntent().getLongExtra("NET_MINTHE_CALENDARAPP_EVENT_ID", -1);
-            if (id == -1) {
-                return;
-            }
-
-            Event e = AppDatabase.getInstance().eventDao().findByID(id);
-            Date end = new Date(
-                    e.getDateTime().getTime()
-                            + e.getDuration() * 1000
-            );
-
-            eventName.setText(e.getEventName());
-            startTime.setText(sdf.format(e.getDateTime()));
-            endTime.setText(sdf.format(end));
-            notes.setText(e.getNotes());
-            Button submitButton = findViewById(R.id.createEventButton);
-            submitButton.setText("Update");
+            setupEditingEnvironment();
         }
+    }
+
+    private void setupEditingEnvironment() {
+        id = getIntent().getLongExtra("NET_MINTHE_CALENDARAPP_EVENT_ID", -1);
+        if (id == -1) {
+            return;
+        }
+
+        Event e = AppDatabase.getInstance().eventDao().findByID(id);
+        Date end = new Date(
+                e.getDateTime().getTime()
+                        + e.getDuration() * 1000
+        );
+
+        eventName.setText(e.getEventName());
+        startTime.setText(sdf.format(e.getDateTime()));
+        endTime.setText(sdf.format(end));
+        notes.setText(e.getNotes());
+        Button submitButton = findViewById(R.id.createEventButton);
+        submitButton.setText("Update");
+
+        ConstraintLayout layout = findViewById(R.id.createEventLayout);
+        ConstraintSet constraintSet = new ConstraintSet();
+
+        Button deleteButton = new Button(this);
+        deleteButton.setId(View.generateViewId());
+        deleteButton.setText("Delete");
+        deleteButton.setBackgroundColor(Color.RED);
+        ConstraintLayout.LayoutParams buttonParams = new ConstraintLayout.LayoutParams(submitButton.getLayoutParams());
+        deleteButton.setLayoutParams(buttonParams);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleDelete(v);
+            }
+        });
+
+        layout.addView(deleteButton);
+
+        constraintSet.clone(layout);
+        constraintSet.connect(deleteButton.getId(), ConstraintSet.TOP, submitButton.getId(), ConstraintSet.BOTTOM);
+        constraintSet.connect(deleteButton.getId(), ConstraintSet.LEFT, layout.getId(), ConstraintSet.LEFT);
+        constraintSet.connect(deleteButton.getId(), ConstraintSet.RIGHT, layout.getId(), ConstraintSet.RIGHT);
+        constraintSet.connect(deleteButton.getId(), ConstraintSet.BOTTOM, layout.getId(), ConstraintSet.BOTTOM);
+        constraintSet.applyTo(layout);
     }
 
     // Method to validate the user inputs to the event fields
@@ -164,6 +195,16 @@ public class CreateEventActivity extends AppCompatActivity {
 
         // Otherwise the input is valid
         return valid;
+    }
+
+    public void handleDelete(View view) {
+        EventDao eventDao = AppDatabase.getInstance().eventDao();
+
+        eventDao.delete(
+                eventDao.findByID(id)
+        );
+
+        finish();
     }
 
     public void handleCreate(View view) {

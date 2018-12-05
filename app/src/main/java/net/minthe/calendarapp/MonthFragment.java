@@ -2,6 +2,7 @@ package net.minthe.calendarapp;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
     public static final String DATE_UNIXTIME = "date-unixtime";
 
     private long date = 0;
+    private int selectedDay = 1;
     private MonthViewModel mViewModel;
 
     private int firstDay;
@@ -110,8 +112,26 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
                 });
         mViewModel.date.setValue(date);
         if (dateChangeListener != null) {
-            dateChangeListener.onDateChange(1, new MonthDetails(date));
+            changeSelectedDay(1);
         }
+    }
+
+    private void changeSelectedDay(int day) {
+        dateChangeListener.onDateChange(day, new MonthDetails(date));
+        this.selectedDay = day;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mViewModel.date.setValue(mViewModel.date.getValue()); // refresh calendar
+                changeSelectedDay(selectedDay);
+            }
+        }, 200); // hopefully any database activity will be finished in 200ms
     }
 
     static final int N_ROWS = 6;
@@ -176,19 +196,20 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
                 prevMonth();
                 MonthDetails mdPrev = new MonthDetails(date);
                 this.dateChangeListener.onDateChange(1, mdPrev);
+                selectedDay = 1;
                 return;
             case R.id.nextMonthButton:
                 nextMonth();
                 MonthDetails mdNext = new MonthDetails(date);
                 this.dateChangeListener.onDateChange(1, mdNext);
+                selectedDay = 1;
                 return;
         }
 
         if (v.getTag() instanceof Integer) {
             int day = (int) v.getTag();
             if (this.dateChangeListener != null && day > 0 && day <= numDays) {
-                MonthDetails md = new MonthDetails(date);
-                this.dateChangeListener.onDateChange(day, md);
+                changeSelectedDay(day);
             }
         }
     }
