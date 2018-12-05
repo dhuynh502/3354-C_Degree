@@ -18,6 +18,9 @@ public class MonthDetails {
         this.date = date;
     }
 
+    /**
+     * @return A MonthDetails instance representing the next chronological month
+     */
     public MonthDetails getNextMonth() {
         Calendar c = GregorianCalendar.getInstance();
         c.clear();
@@ -26,6 +29,9 @@ public class MonthDetails {
         return new MonthDetails(c.getTimeInMillis());
     }
 
+    /**
+     * @return A MonthDetails instance representing the previous chronological month
+     */
     public MonthDetails getPrevMonth() {
         Calendar c = GregorianCalendar.getInstance();
         c.clear();
@@ -92,6 +98,10 @@ public class MonthDetails {
         return c.get(Calendar.DAY_OF_WEEK) - 1;
     }
 
+    /**
+     * @return int - the current year on the Gregorian Calendar. Not defined for any dates
+     * before 1 Jan, 1970
+     */
     public int getYear() {
         Calendar c = GregorianCalendar.getInstance();
         c.clear();
@@ -99,6 +109,9 @@ public class MonthDetails {
         return c.get(Calendar.YEAR);
     }
 
+    /**
+     * @return int - the current month, zero-indexed (corresponds to Calendar.MONTH)
+     */
     public int getMonth() {
         Calendar c = GregorianCalendar.getInstance();
         c.clear();
@@ -106,6 +119,10 @@ public class MonthDetails {
         return c.get(Calendar.MONTH);
     }
 
+    /**
+     * @param day Which day of the month
+     * @return long - the instant representing 00:00:00 on the specified day
+     */
     public long getDayStart(int day) {
         Calendar c = GregorianCalendar.getInstance();
         c.clear();
@@ -117,6 +134,10 @@ public class MonthDetails {
         return c.getTimeInMillis();
     }
 
+    /**
+     * @param day Which day of the month
+     * @return long - the instant representing 23:59:59 on the specified day
+     */
     public long getDayEnd(int day) {
         Calendar c = GregorianCalendar.getInstance();
         c.clear();
