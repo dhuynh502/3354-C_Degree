@@ -66,8 +66,18 @@ public class CreateEventActivity extends AppCompatActivity {
                             amPm = "AM";
                         }
 
-                        // Displays formatted time in EditText box
-                        startTime.setText(String.format("%2d:%02d", hourOfDay % 12, minute) + " " + amPm);
+                        // Fixes issue where 12:00 was displayed as 0:00
+                        if (hourOfDay == 0) {
+                            // Displays formatted time in EditText box
+                            startTime.setText(String.format("%2d:%02d", hourOfDay + 12, minute) + " " + amPm);
+                        } else if (hourOfDay == 12) {
+                            // Displays formatted time in EditText box
+                            startTime.setText(String.format("%2d:%02d", hourOfDay, minute) + " " + amPm);
+                        } else {
+                            // Displays formatted time in EditText box
+                            startTime.setText(String.format("%2d:%02d", hourOfDay % 12, minute) + " " + amPm);
+                        }
+
                     }
                 }, 0, 0, false);
 
@@ -93,8 +103,18 @@ public class CreateEventActivity extends AppCompatActivity {
                             amPm = "AM";
                         }
 
-                        // Displays formatted time in EditText box
-                        endTime.setText(String.format("%2d:%02d", hourOfDay % 12, minute) + " " + amPm);
+                        // Fixes issue where 12:00 was displayed as 0:00
+                        if (hourOfDay == 0) {
+                            // Displays formatted time in EditText box
+                            endTime.setText(String.format("%2d:%02d", hourOfDay + 12, minute) + " " + amPm);
+                        } else if (hourOfDay == 12) {
+                            // Displays formatted time in EditText box
+                            endTime.setText(String.format("%2d:%02d", hourOfDay, minute) + " " + amPm);
+                        } else {
+                            // Displays formatted time in EditText box
+                            endTime.setText(String.format("%2d:%02d", hourOfDay % 12, minute) + " " + amPm);
+                        }
+
                     }
                 }, 0, 0, false);
 
