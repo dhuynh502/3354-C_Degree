@@ -1,5 +1,6 @@
 package net.minthe.calendarapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import net.minthe.calendarapp.domain.Event;
@@ -22,7 +23,10 @@ public class EventListActivity extends AppCompatActivity implements EventFragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_list);
+        replaceEventList();
+    }
 
+    private void replaceEventList() {
         Calendar c = GregorianCalendar.getInstance();
 
         EventFragment eventFragment = EventFragment.newInstance(
@@ -37,7 +41,25 @@ public class EventListActivity extends AppCompatActivity implements EventFragmen
     }
 
     @Override
-    public void onListFragmentInteraction(Event item) {
+    protected void onPostResume() {
+        super.onPostResume();
+        replaceEventList();
+    }
 
+    @Override
+    public void onListFragmentInteraction(Event item) {
+        Calendar c = GregorianCalendar.getInstance();
+        c.clear();
+        c.setTime(item.getDateTime());
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+
+        Intent edit = new Intent(this, CreateEventActivity.class);
+        edit.putExtra("NET_MINTHE_CALENDARAPP_SELECTED_DATE",
+                c.getTimeInMillis());
+        edit.putExtra("NET_MINTHE_CALENDARAPP_EDIT_MODE", true);
+        edit.putExtra("NET_MINTHE_CALENDARAPP_EVENT_ID", item.getEventId());
+        startActivity(edit);
     }
 }
