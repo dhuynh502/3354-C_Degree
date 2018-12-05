@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Utility class to extract events in a list by day
+ */
 public class EventListDetails {
 
     private HashMap<Integer, ArrayList<Event>> eventsByDay;

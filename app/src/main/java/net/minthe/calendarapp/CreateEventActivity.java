@@ -139,20 +139,31 @@ public class CreateEventActivity extends AppCompatActivity {
         }
 
         Event e = AppDatabase.getInstance().eventDao().findByID(id);
+
+        // Events are stored in the database in a (timestamp, duration) format, but we
+        // need to convert that back to a (start time, end time) format for user interaction
         Date end = new Date(
                 e.getDateTime().getTime()
                         + e.getDuration() * 1000
         );
 
+        // Populate the form fields with the existing data
         eventName.setText(e.getEventName());
         startTime.setText(sdf.format(e.getDateTime()));
         endTime.setText(sdf.format(end));
         notes.setText(e.getNotes());
+
+        // Change the text on the "Create" button to read "Update" instead
         Button submitButton = findViewById(R.id.createEventButton);
         submitButton.setText("Update");
 
+        // The rest of this is just creating a button which will delete the selected event
+        // and putting it in the right place
+
         ConstraintLayout layout = findViewById(R.id.createEventLayout);
         ConstraintSet constraintSet = new ConstraintSet();
+
+        // Creating the button and setting its properties
 
         Button deleteButton = new Button(this);
         deleteButton.setId(View.generateViewId());
@@ -167,17 +178,27 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         });
 
+        // Add the button to the layout
         layout.addView(deleteButton);
 
+        // Create a copy of the current set of constraints, as it is immutable
         constraintSet.clone(layout);
+
+        // Add constraints on the button so that it appears in the correct place
         constraintSet.connect(deleteButton.getId(), ConstraintSet.TOP, submitButton.getId(), ConstraintSet.BOTTOM);
         constraintSet.connect(deleteButton.getId(), ConstraintSet.LEFT, layout.getId(), ConstraintSet.LEFT);
         constraintSet.connect(deleteButton.getId(), ConstraintSet.RIGHT, layout.getId(), ConstraintSet.RIGHT);
         constraintSet.connect(deleteButton.getId(), ConstraintSet.BOTTOM, layout.getId(), ConstraintSet.BOTTOM);
+
+        // Change the previous set of constraints to the new set.
         constraintSet.applyTo(layout);
     }
 
-    // Method to validate the user inputs to the event fields
+    /**
+     * Validate the user inputs to the event fields
+     *
+     * @return boolean - whether or not the input is valid
+     */
     private boolean validate() {
         boolean valid = true;
 
@@ -217,6 +238,9 @@ public class CreateEventActivity extends AppCompatActivity {
         return valid;
     }
 
+    /**
+     * Button callback for the Delete button
+     */
     public void handleDelete(View view) {
         EventDao eventDao = AppDatabase.getInstance().eventDao();
 
@@ -227,6 +251,9 @@ public class CreateEventActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Button callback for the create and update buttons
+     */
     public void handleCreate(View view) {
         if (!validate()) {
             return;
@@ -240,95 +267,111 @@ public class CreateEventActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
-            // god knows what happens here, as this should _never_ happen
-            // as the same check is repeated in #validate
+            // this should _never_ happen as the same check is repeated in #validate
         }
 
-        Calendar cal = GregorianCalendar.getInstance();
-        cal.setTime(startDate);
-        long startSecondsFromMidnight = cal.get(Calendar.HOUR_OF_DAY) * 60 * 60 + cal.get(Calendar.MINUTE) * 60;
+        // Need to convert (start time, end time) into (start time, duration) for database format
+        long secondsFromMidnight = getSecondsFromMidnight(startDate);
+        long duration = getDurationSeconds(startDate, endDate);
+        if (duration == -1) {
+            return; // Passed invalid inputs to above function
+        }
 
-        cal.setTime(endDate);
+        Event event = new Event(
+                eventName.getText().toString(),
+                // startDate above does not actually contain the correct date, just the time
+                new Date(date + secondsFromMidnight * 1000),
+                duration,
+                notes.getText().toString()
+        );
+
+        if (edit) { // Are we creating or updating?
+            event.setEventId(id);
+            new EventUpdateTask(this, event)
+                    .execute();
+
+        } else {
+            new EventInsertionTask(this, event)
+                    .execute();
+        }
+
+        finish(); // Return to previous activity
+    }
+
+    /**
+     * @param date The input time
+     * @return The number of seconds since midnight represented by date
+     */
+    private long getSecondsFromMidnight(Date date) {
+        Calendar cal = GregorianCalendar.getInstance();
+        cal.setTime(date);
+        return cal.get(Calendar.HOUR_OF_DAY) * 60 * 60 + cal.get(Calendar.MINUTE) * 60;
+    }
+
+    /**
+     * Utility function to convert (start time, end time) UI elements to
+     * (start time, duration) format for database insertion
+     *
+     * @param start The start time
+     * @param end   The end time
+     * @return The duration between the two times in seconds. -1 if the
+     * inputs are not valid
+     */
+    private long getDurationSeconds(Date start, Date end) {
+        Calendar cal = GregorianCalendar.getInstance();
+        cal.setTime(start);
+        long startSecondsFromMidnight = getSecondsFromMidnight(start);
+
+        cal.setTime(end);
         long endSecondsFromMidnight = cal.get(Calendar.HOUR_OF_DAY) * 60 * 60 + cal.get(Calendar.MINUTE) * 60;
 
         if (endSecondsFromMidnight <= startSecondsFromMidnight) {
             endTime.setBackgroundColor(Color.RED);
-            return;
+            return -1;
         }
-        long duration = endSecondsFromMidnight - startSecondsFromMidnight;
-
-        if (edit) {
-            new EventUpdateTask(this,
-                    id,
-                    eventName.getText().toString(),
-                    new Date(date + startSecondsFromMidnight * 1000),
-                    duration,
-                    notes.getText().toString())
-                    .execute();
-
-        } else {
-            new EventInsertionTask(this,
-                    eventName.getText().toString(),
-                    new Date(date + startSecondsFromMidnight * 1000),
-                    duration,
-                    notes.getText().toString())
-                    .execute();
-
-        }
-
-        finish();
+        return endSecondsFromMidnight - startSecondsFromMidnight;
     }
 
-    // Android forbids database insertion in the main thread, and we're using Java 7, so
-    // enjoy this abomination
+    /**
+     * Class representing a function which inserts an event into the database.
+     * <p>
+     * Needed because of UI thread constraints.
+     */
     private static class EventInsertionTask extends AsyncTask<Void, Void, Void> {
         private WeakReference<Activity> activity;
-        private String eventName;
-        private Date date;
-        private long duration;
-        private String notes;
+        private Event event;
 
-        public EventInsertionTask(Activity activity, String eventName, Date date, long duration, String notes) {
+        public EventInsertionTask(Activity activity, Event event) {
             this.activity = new WeakReference<>(activity);
-            this.eventName = eventName;
-            this.date = date;
-            this.duration = duration;
-            this.notes = notes;
+            this.event = event;
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
             EventDao eventDao = AppDatabase.getInstance().eventDao();
-            eventDao.insertAll(new Event(
-                    eventName, date, duration, notes
-            ));
+            eventDao.insertAll(event);
             return null;
         }
     }
 
+    /**
+     * Class representing a function which updates an event in the database
+     * <p>
+     * Needed because of UI thread constraints
+     */
     private static class EventUpdateTask extends AsyncTask<Void, Void, Void> {
         private WeakReference<Activity> activity;
-        private long id;
-        private String name;
-        private Date date;
-        private long duration;
-        private String notes;
+        private Event event;
 
-        public EventUpdateTask(Activity activity, long id, String name, Date date, long duration, String notes) {
+        public EventUpdateTask(Activity activity, Event event) {
             this.activity = new WeakReference<>(activity);
-            this.id = id;
-            this.name = name;
-            this.date = date;
-            this.duration = duration;
-            this.notes = notes;
+            this.event = event;
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
             EventDao eventDao = AppDatabase.getInstance().eventDao();
-            eventDao.update(new Event(
-                    id, name, date, duration, notes
-            ));
+            eventDao.update(event);
             return null;
         }
     }
