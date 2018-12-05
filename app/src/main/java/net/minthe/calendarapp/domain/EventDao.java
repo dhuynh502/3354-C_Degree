@@ -6,6 +6,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 @Dao
 public interface EventDao {
@@ -24,6 +25,9 @@ public interface EventDao {
 
     @Query("SELECT * FROM event")
     List<Event> getAll();
+
+    @Update
+    void update(Event event);
 
     @Insert
     void insertAll(Event... events);

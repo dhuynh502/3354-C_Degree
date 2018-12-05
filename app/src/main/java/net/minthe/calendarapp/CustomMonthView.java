@@ -70,7 +70,12 @@ public class CustomMonthView extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(Event item) {
-        // TODO: Switch to edit/delete screen
+        Intent edit = new Intent(this, CreateEventActivity.class);
+        edit.putExtra("NET_MINTHE_CALENDARAPP_SELECTED_DATE",
+                new MonthDetails(selectedDate).getDayStart(selectedDay));
+        edit.putExtra("NET_MINTHE_CALENDARAPP_EDIT_MODE", true);
+        edit.putExtra("NET_MINTHE_CALENDARAPP_EVENT_ID", item.getEventId());
+        startActivity(edit);
     }
 
     public void onEventAdd(View view) {

@@ -18,6 +18,8 @@ public class Event {
     String eventName;
     @ColumnInfo(name = "event_unixtime")
     private Date dateTime;
+
+    // in seconds
     @ColumnInfo(name = "duration")
     private long duration;
     @ColumnInfo(name = "notes")
@@ -35,6 +37,16 @@ public class Event {
         this.notes = notes;
         this.primaryEventCategory = primaryEventCategory;
     }
+
+    @Ignore
+    public Event(long eventId, String eventName, Date dateTime, long duration, String notes) {
+        this.eventId = eventId;
+        this.eventName = eventName;
+        this.dateTime = dateTime;
+        this.duration = duration;
+        this.notes = notes;
+    }
+
 
     @Ignore
     public Event(String eventName, Date dateTime, long duration, String notes) {

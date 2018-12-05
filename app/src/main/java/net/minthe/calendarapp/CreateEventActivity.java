@@ -2,11 +2,11 @@ package net.minthe.calendarapp;
 
 import android.app.Activity;
 import android.app.TimePickerDialog;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
@@ -34,40 +34,44 @@ public class CreateEventActivity extends AppCompatActivity {
     long date;
     String amPm;
 
-    static SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.US);
+    long id;
+    boolean edit;
+
+    static SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aaa", Locale.US);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
 
+        AppDatabase.instantiate(getApplicationContext());
+
         eventName = findViewById(R.id.eventName);
         startTime = findViewById(R.id.startTime);
 
         // Shows TimePicker when user clicks the startTime EditText box
         startTime.setOnClickListener(new View.OnClickListener() {
-                  @Override
-                  public void onClick(View view) {
-                      TimePickerDialog timePickerDialog = new TimePickerDialog(CreateEventActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                          @Override
-                          public void onTimeSet(TimePicker timepicker, int hourOfDay, int minute) {
+            @Override
+            public void onClick(View view) {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(CreateEventActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timepicker, int hourOfDay, int minute) {
 
-                              // Determines whether to display AM or PM
-                              if(hourOfDay >= 12)
-                              {
-                                  amPm = "PM";
-                              } else {
-                                  amPm = "AM";
-                              }
+                        // Determines whether to display AM or PM
+                        if (hourOfDay >= 12) {
+                            amPm = "PM";
+                        } else {
+                            amPm = "AM";
+                        }
 
-                              // Displays formatted time in EditText box
-                              startTime.setText(String.format("%2d:%02d", hourOfDay % 12, minute) + " " + amPm);
-                          }
-                      },0,0,false);
+                        // Displays formatted time in EditText box
+                        startTime.setText(String.format("%2d:%02d", hourOfDay % 12, minute) + " " + amPm);
+                    }
+                }, 0, 0, false);
 
-                      // Displays the TimePicker window
-                      timePickerDialog.show();
-                  }
+                // Displays the TimePicker window
+                timePickerDialog.show();
+            }
         });
 
         endTime = findViewById(R.id.endTime);
@@ -81,8 +85,7 @@ public class CreateEventActivity extends AppCompatActivity {
                     public void onTimeSet(TimePicker timepicker, int hourOfDay, int minute) {
 
                         // Determines whether to display AM or PM
-                        if(hourOfDay >= 12)
-                        {
+                        if (hourOfDay >= 12) {
                             amPm = "PM";
                         } else {
                             amPm = "AM";
@@ -91,7 +94,7 @@ public class CreateEventActivity extends AppCompatActivity {
                         // Displays formatted time in EditText box
                         endTime.setText(String.format("%2d:%02d", hourOfDay % 12, minute) + " " + amPm);
                     }
-                },0,0,false);
+                }, 0, 0, false);
 
                 // Displays the TimePicker window
                 timePickerDialog.show();
@@ -100,6 +103,27 @@ public class CreateEventActivity extends AppCompatActivity {
 
         notes = findViewById(R.id.notes);
         date = getIntent().getLongExtra("NET_MINTHE_CALENDARAPP_SELECTED_DATE", 0);
+
+        edit = getIntent().getBooleanExtra("NET_MINTHE_CALENDARAPP_EDIT_MODE", false);
+        if (edit) {
+            id = getIntent().getLongExtra("NET_MINTHE_CALENDARAPP_EVENT_ID", -1);
+            if (id == -1) {
+                return;
+            }
+
+            Event e = AppDatabase.getInstance().eventDao().findByID(id);
+            Date end = new Date(
+                    e.getDateTime().getTime()
+                            + e.getDuration() * 1000
+            );
+
+            eventName.setText(e.getEventName());
+            startTime.setText(sdf.format(e.getDateTime()));
+            endTime.setText(sdf.format(end));
+            notes.setText(e.getNotes());
+            Button submitButton = findViewById(R.id.createEventButton);
+            submitButton.setText("Update");
+        }
     }
 
     // Method to validate the user inputs to the event fields
@@ -146,9 +170,6 @@ public class CreateEventActivity extends AppCompatActivity {
         if (!validate()) {
             return;
         }
-        AppDatabase.instantiate(view.getContext());
-
-        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aaa", Locale.US);
 
         Date startDate = null;
         Date endDate = null;
@@ -175,9 +196,26 @@ public class CreateEventActivity extends AppCompatActivity {
         }
         long duration = endSecondsFromMidnight - startSecondsFromMidnight;
 
-        new EventInsertionTask(this, eventName.getText().toString(), new Date(date + startSecondsFromMidnight * 1000), duration, notes.getText().toString()).execute();
-        Intent backtoMain = new Intent(this, MainActivity.class);
-        startActivity(backtoMain);
+        if (edit) {
+            new EventUpdateTask(this,
+                    id,
+                    eventName.getText().toString(),
+                    new Date(date + startSecondsFromMidnight * 1000),
+                    duration,
+                    notes.getText().toString())
+                    .execute();
+
+        } else {
+            new EventInsertionTask(this,
+                    eventName.getText().toString(),
+                    new Date(date + startSecondsFromMidnight * 1000),
+                    duration,
+                    notes.getText().toString())
+                    .execute();
+
+        }
+
+        finish();
     }
 
     // Android forbids database insertion in the main thread, and we're using Java 7, so
@@ -202,6 +240,33 @@ public class CreateEventActivity extends AppCompatActivity {
             EventDao eventDao = AppDatabase.getInstance().eventDao();
             eventDao.insertAll(new Event(
                     eventName, date, duration, notes
+            ));
+            return null;
+        }
+    }
+
+    private static class EventUpdateTask extends AsyncTask<Void, Void, Void> {
+        private WeakReference<Activity> activity;
+        private long id;
+        private String name;
+        private Date date;
+        private long duration;
+        private String notes;
+
+        public EventUpdateTask(Activity activity, long id, String name, Date date, long duration, String notes) {
+            this.activity = new WeakReference<>(activity);
+            this.id = id;
+            this.name = name;
+            this.date = date;
+            this.duration = duration;
+            this.notes = notes;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            EventDao eventDao = AppDatabase.getInstance().eventDao();
+            eventDao.update(new Event(
+                    id, name, date, duration, notes
             ));
             return null;
         }
