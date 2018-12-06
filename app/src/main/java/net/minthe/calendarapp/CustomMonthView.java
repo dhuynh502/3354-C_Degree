@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentManager;
 public class CustomMonthView extends AppCompatActivity
         implements EventFragment.OnListFragmentInteractionListener {
 
+    // Declare variables
     private long selectedDate = 0;
     private int selectedDay = 1;
 
@@ -51,6 +52,7 @@ public class CustomMonthView extends AppCompatActivity
                         .replace(R.id.monthEventFragContainer, eventFragment, "evFrag")
                         .commit();
 
+                // Displays event list header
                 TextView eventHeader = findViewById(R.id.eventHeader);
                 eventHeader.setText("Events on " + day + " " + md.getMonthName());
 
@@ -68,6 +70,7 @@ public class CustomMonthView extends AppCompatActivity
                 .replace(R.id.monthFragContainer, monthFragment)
                 .commit();
 
+        // Creates event header based on the currently selected day
         TextView eventHeader = findViewById(R.id.eventHeader);
         eventHeader.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +84,11 @@ public class CustomMonthView extends AppCompatActivity
         });
     }
 
+    /**
+     * Method to display event list with details at the bottom of the screen
+     *
+     * @param item - event instance
+     */
     @Override
     public void onListFragmentInteraction(Event item) {
         Intent edit = new Intent(this, CreateEventActivity.class);
@@ -91,6 +99,12 @@ public class CustomMonthView extends AppCompatActivity
         startActivity(edit);
     }
 
+    /**
+     * Method for adding an event
+     * Calls CreateEventActivity to handle event creation
+     *
+     * @param view - the current view
+     */
     public void onEventAdd(View view) {
         Intent intent = new Intent(this, CreateEventActivity.class);
         intent.putExtra("NET_MINTHE_CALENDARAPP_SELECTED_DATE",

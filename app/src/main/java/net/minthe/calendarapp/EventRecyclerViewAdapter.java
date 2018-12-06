@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecyclerViewAdapter.ViewHolder> {
 
+    // Declare variables
     private final List<Event> mValues;
     private final OnListFragmentInteractionListener mListener;
 

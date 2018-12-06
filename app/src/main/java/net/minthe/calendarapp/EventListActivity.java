@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentManager;
  */
 public class EventListActivity extends AppCompatActivity implements EventFragment.OnListFragmentInteractionListener {
 
+    // Declare variables
     private static long endTimestamp = 15440835000000L; // arbitrary date in 2459
 
     @Override
@@ -26,6 +27,10 @@ public class EventListActivity extends AppCompatActivity implements EventFragmen
         replaceEventList();
     }
 
+    /**
+     * Method to update event list
+     *
+     */
     private void replaceEventList() {
         Calendar c = GregorianCalendar.getInstance();
 
@@ -40,12 +45,21 @@ public class EventListActivity extends AppCompatActivity implements EventFragmen
                 .commit();
     }
 
+    /**
+     * Event list is updated when Agenda view is selected
+     *
+     */
     @Override
     protected void onPostResume() {
         super.onPostResume();
         replaceEventList();
     }
 
+    /**
+     * Method to create event list with details
+     *
+     * @param item - event instance
+     */
     @Override
     public void onListFragmentInteraction(Event item) {
         //creating calendar object here and setting the time starting at 0

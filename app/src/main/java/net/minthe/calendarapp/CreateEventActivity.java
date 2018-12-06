@@ -29,7 +29,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 // Class to handle event creation
 public class CreateEventActivity extends AppCompatActivity {
-    // Variables
+    // Declare variables
     EditText eventName;
     EditText startTime;
     EditText endTime;

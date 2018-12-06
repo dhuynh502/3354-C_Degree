@@ -27,6 +27,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 public class MonthFragment extends Fragment implements View.OnClickListener {
 
+    // Declare Variables
     public static final String DATE_UNIXTIME = "date-unixtime";
 
     private long date = 0;
@@ -67,6 +68,14 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    /**
+     * Creates inital view
+     *
+     * @param inflater -
+     * @param container -
+     * @param savedInstanceState -
+     * @return v - current view
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -79,6 +88,7 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
 
         return v;
     }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -117,11 +127,20 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    /**
+     * Method to change days
+     *
+     * @param day - the currently selected day
+     */
     private void changeSelectedDay(int day) {
         dateChangeListener.onDateChange(day, new MonthDetails(date));
         this.selectedDay = day;
     }
 
+    /**
+     * Refreshes the calendar view
+     *
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -135,11 +154,12 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
         }, 200); // hopefully any database activity will be finished in 200ms
     }
 
+    // Define number of rows and columns for the table
     static final int N_ROWS = 6;
     static final int N_COLS = 7;
 
     /**
-     * Draw calendar using 
+     * Draw calendar using a table
      *
      * @return boolean - whether or not the input is valid
      */
@@ -148,14 +168,13 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
         monthDate.setGravity(Gravity.CENTER);
         monthDate.setText(monthName);
 
-
         TableLayout layout = this.getView().findViewById(R.id.monthTableLayout);
         layout.removeAllViewsInLayout();
 
         long monthStart = new MonthDetails(date).getMonthStart();
         EventListDetails listDetails = new EventListDetails(monthStart, mViewModel.eventList.getValue());
 
-
+        // Build and populate the calendar
         for (int i = 0; i < N_ROWS; i++) {
             TableRow row = new TableRow(layout.getContext());
             for (int j = 0; j < N_COLS; j++) {
@@ -180,14 +199,23 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
 
     }
 
+    /**
+     *  Sets the next month
+     */
     public void nextMonth() {
         mViewModel.date.setValue(nextMonth);
     }
 
+    /**
+     *  Sets the previous month
+     */
     public void prevMonth() {
         mViewModel.date.setValue(prevMonth);
     }
 
+    /**
+     *  Called on date change
+     */
     public void setDateChangeListener(DateChangeListener dateChangeListener) {
         this.dateChangeListener = dateChangeListener;
     }
@@ -197,6 +225,11 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
     }
 
+    /**
+     * Method to change view to previous or next month
+     *
+     * @param v - the current view
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

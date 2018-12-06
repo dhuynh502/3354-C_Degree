@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class EventFragment extends Fragment {
 
+    // Declare variables
     private static final String ARG_COLUMN_COUNT = "column-count";
     private static final String ARG_START_TIMESTAMP = "start-timestamp";
     private static final String ARG_END_TIMESTAMP = "end-timestamp";
@@ -83,6 +84,7 @@ public class EventFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
+            // Gets events in the selected time range from the database
             List<Event> eventsInRange = eventDao.findEventsBetween(startTimestamp, endTimestamp);
 
             recyclerView.setAdapter(
