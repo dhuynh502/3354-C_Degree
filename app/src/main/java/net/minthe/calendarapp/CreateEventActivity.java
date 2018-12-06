@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import net.minthe.calendarapp.domain.AppDatabase;
 import net.minthe.calendarapp.domain.Event;
@@ -277,10 +278,18 @@ public class CreateEventActivity extends AppCompatActivity {
             return; // Passed invalid inputs to above function
         }
 
+        long start = date + secondsFromMidnight * 1000;
+        long end = start + duration * 1000;
+
+        if (conflictsExist(start, end)) {
+            Toast.makeText(getApplicationContext(), "Event conflicts exist.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Event event = new Event(
                 eventName.getText().toString(),
                 // startDate above does not actually contain the correct date, just the time
-                new Date(date + secondsFromMidnight * 1000),
+                new Date(start),
                 duration,
                 notes.getText().toString()
         );
@@ -296,6 +305,15 @@ public class CreateEventActivity extends AppCompatActivity {
         }
 
         finish(); // Return to previous activity
+    }
+
+    /**
+     * @param start The start time to check
+     * @param end   The end time to check
+     * @return boolean - true if there are any events within the specified range
+     */
+    private boolean conflictsExist(long start, long end) {
+        return !AppDatabase.getInstance().eventDao().findEventsBetween(start, end).isEmpty();
     }
 
     /**
