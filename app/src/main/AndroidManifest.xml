@@ -19,8 +19,8 @@
         <activity android:name=".CreateEventActivity" />
         <activity android:name=".EventListActivity" />
         <activity android:name=".CustomMonthView" />
-        <activity android:name=".WeekView" />
-        <activity android:name=".day.DayViewActivity"></activity>
+        <activity android:name=".day.DayViewActivity" />
+        <activity android:name=".week.WeekViewActivity" />
     </application>
 
 </manifest>

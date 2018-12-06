@@ -35,15 +35,17 @@ public class DayViewFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "dayview-start-timestamp";
     private static final String ARG_PARAM2 = "dayview-end-timestamp";
+    private static final String ARG_PARAM3 = "dayview-event-width";
+    private static final String ARG_PARAM4 = "dayview-display-hours";
 
-    private static final int PIXELS_PER_HOUR = 200;
-    private static final int HOUR_WIDTH = 50;
-    private static final int HOUR_MARGIN = 10;
-    private static final int EVENT_WIDTH = HOUR_WIDTH * 15;
+    public static final int PIXELS_PER_HOUR = 200;
+    public static final int HOUR_WIDTH = 50;
+    public static final int HOUR_MARGIN = 10;
 
-    // TODO: Rename and change types of parameters
     private long start;
     private long end;
+    private int eventWidth;
+    private boolean displayHours;
 
     private OnFragmentInteractionListener mListener;
 
@@ -60,11 +62,13 @@ public class DayViewFragment extends Fragment {
      * @return A new instance of fragment DayViewFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DayViewFragment newInstance(long start, long end) {
+    public static DayViewFragment newInstance(long start, long end, int eventWidth, boolean displayHours) {
         DayViewFragment fragment = new DayViewFragment();
         Bundle args = new Bundle();
         args.putLong(ARG_PARAM1, start);
         args.putLong(ARG_PARAM2, end);
+        args.putInt(ARG_PARAM3, eventWidth);
+        args.putBoolean(ARG_PARAM4, displayHours);
         fragment.setArguments(args);
         return fragment;
     }
@@ -75,6 +79,8 @@ public class DayViewFragment extends Fragment {
         if (getArguments() != null) {
             start = getArguments().getLong(ARG_PARAM1);
             end = getArguments().getLong(ARG_PARAM2);
+            eventWidth = getArguments().getInt(ARG_PARAM3);
+            displayHours = getArguments().getBoolean(ARG_PARAM4);
         }
     }
 
@@ -86,8 +92,40 @@ public class DayViewFragment extends Fragment {
 
         RelativeLayout layout = v.findViewById(R.id.dayLayout);
 
+        AppDatabase.instantiate(getContext());
         List<Event> events = AppDatabase.getInstance().eventDao().findEventsBetween(start, end);
 
+        addHoursToLayout(layout);
+
+        addEventsToLayout(layout, events, HOUR_WIDTH + HOUR_MARGIN, eventWidth);
+
+        return v;
+    }
+
+    public static void addEventsToLayout(RelativeLayout layout, List<Event> events, int leftOffset, int eventWidth) {
+        for (Event e : events) {
+            Calendar c = GregorianCalendar.getInstance();
+            c.setTime(e.getDateTime());
+
+            double placementMultiplier = c.get(Calendar.HOUR_OF_DAY) + c.get(Calendar.MINUTE) / 60.00d;
+            double sizeMultiplier = e.getDuration() / 3600.00d;
+            TextView eventText = new TextView(layout.getContext());
+            eventText.setText(e.getEventName());
+            eventText.setGravity(Gravity.CENTER);
+            eventText.setBackgroundColor(Color.parseColor("#e05757"));
+
+            RelativeLayout.LayoutParams eventParams =
+                    new RelativeLayout.LayoutParams(eventWidth, (int) (PIXELS_PER_HOUR * sizeMultiplier));
+            eventParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            eventParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            eventParams.setMargins(leftOffset, (int) (PIXELS_PER_HOUR * placementMultiplier), 0, 0);
+
+            eventText.setLayoutParams(eventParams);
+            layout.addView(eventText);
+        }
+    }
+
+    public static void addHoursToLayout(RelativeLayout layout) {
         for (int i = 0; i < 24; i++) {
             TextView hour = new TextView(layout.getContext());
             hour.setText(Integer.toString(i));
@@ -101,29 +139,6 @@ public class DayViewFragment extends Fragment {
             hour.setLayoutParams(hourParams);
             layout.addView(hour);
         }
-
-        for (Event e : events) {
-            Calendar c = GregorianCalendar.getInstance();
-            c.setTime(e.getDateTime());
-
-            double placementMultiplier = c.get(Calendar.HOUR_OF_DAY) + c.get(Calendar.MINUTE) / 60.00d;
-            double sizeMultiplier = e.getDuration() / 3600.00d;
-            TextView eventText = new TextView(layout.getContext());
-            eventText.setText(e.getEventName());
-            eventText.setGravity(Gravity.CENTER);
-            eventText.setBackgroundColor(Color.parseColor("#e05757"));
-
-            RelativeLayout.LayoutParams eventParams =
-                    new RelativeLayout.LayoutParams(EVENT_WIDTH, (int) (PIXELS_PER_HOUR * sizeMultiplier));
-            eventParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            eventParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-            eventParams.setMargins(HOUR_WIDTH + HOUR_MARGIN, (int) (PIXELS_PER_HOUR * placementMultiplier), 0, 0);
-
-            eventText.setLayoutParams(eventParams);
-            layout.addView(eventText);
-        }
-
-        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

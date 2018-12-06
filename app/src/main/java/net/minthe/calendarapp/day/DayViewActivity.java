@@ -11,6 +11,8 @@ import androidx.fragment.app.FragmentManager;
 public class DayViewActivity extends AppCompatActivity
         implements DayViewFragment.OnFragmentInteractionListener {
 
+    private final int EVENT_WIDTH = 750; // pixels
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,7 +21,7 @@ public class DayViewActivity extends AppCompatActivity
         long start = getIntent().getLongExtra("NET_MINTHE_CALENDARAPP_START_DATE", 0);
         long end = getIntent().getLongExtra("NET_MINTHE_CALENDARAPP_END_DATE", 0);
 
-        DayViewFragment dvf = DayViewFragment.newInstance(start, end);
+        DayViewFragment dvf = DayViewFragment.newInstance(start, end, EVENT_WIDTH, true);
 
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction()

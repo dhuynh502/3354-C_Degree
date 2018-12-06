@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import net.minthe.calendarapp.week.WeekViewActivity;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,6 +23,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void onCustomMonthView(View view) {
         Intent intent = new Intent(this, CustomMonthView.class);
+        startActivity(intent);
+    }
+
+    public void onWeekView(View view) {
+        Intent intent = new Intent(this, WeekViewActivity.class);
         startActivity(intent);
     }
 }
