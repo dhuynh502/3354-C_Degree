@@ -19,9 +19,10 @@
 
       Implemented Functionalities:
       
-      - Basic calendar
-      - Monthly view: Shows each month with colored days for events
-      - Agenda view: Chronological list of events starting from the current day
-      - Add events from monthly view
-      - Update or delete events from agenda view
+      1.0 Basic calendar
+          1.1 Monthly view: Shows each month with colored days for events
+              1.1.1 Add events from monthly view
+          1.2 Agenda view: Chronological list of events starting from the current day
+              1.2.1 Update or delete events from agenda view
+
       
