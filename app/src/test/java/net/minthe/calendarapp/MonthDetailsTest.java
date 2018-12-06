@@ -63,7 +63,18 @@ public class MonthDetailsTest {
     }
 
     @Test
+    /*Test to check next month is valid*/
     public void testNextMonth() {
+        Calendar c = GregorianCalendar.getInstance();
+        c.set(Calendar.YEAR, 2018);
+        c.set(Calendar.MONTH, Calendar.AUGUST);
+        c.set(Calendar.DAY_OF_MONTH, 28);
+        int month = c.get(Calendar.MONTH); // months are numbered from JANUARY TO DECEMBER [0,11]
+
+        int currentMonth = c.get(Calendar.DAY_OF_MONTH); //days in MONTH
+        int nextMonth = currentMonth + 1;
+        MonthDetails md = new MonthDetails(c.getTimeInMillis());
+        assertEquals(nextMonth, md.getNextMonth());
 
     }
 
