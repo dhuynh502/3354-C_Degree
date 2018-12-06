@@ -1,0 +1,27 @@
+(i)	Design Pattern and Code Location
+
+    Singleton design pattern used for the database
+    Located at app/src/main/app/src/main/java/net/minthe/calendarapp/CreateEventActivity (lines 350 -354)
+
+(ii) Test Classes and Location
+
+     Michael - MonthDetailsTest -> app/src/test/java/net/minthe/calendarapp/MonthDetailsTest
+     Duc - 
+     Kristie - 
+     Jay - 
+     
+(iii)	Building and Running the App:
+
+      1. Clone or download ZIP of the repository
+      2. Open "3354-C_Degree-master" as a project in Android Studio
+      3. Sync gradle files
+      4. Build/Run
+
+      Implemented Functionalities:
+      
+      - Basic calendar
+      - Monthly view: Shows each month with colored days for events
+      - Agenda view: Chronological list of events starting from the current day
+      - Add events from monthly view
+      - Update or delete events from agenda view
+      
