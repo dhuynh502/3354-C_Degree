@@ -207,18 +207,30 @@ public class CreateEventActivity extends AppCompatActivity {
         if (eventName.getText().toString().trim().isEmpty()) {
             eventName.setBackgroundColor(Color.parseColor("#e58989"));
             valid = false;
+
+            // Prints message to notify the user of the error
+            Toast.makeText(getBaseContext(),"Please fill out the event name" ,
+                    Toast.LENGTH_LONG).show();
         }
 
         // If the start time field is left blank then set the color to red; not valid
         if (startTime.getText().toString().isEmpty()) {
             startTime.setBackgroundColor(Color.parseColor("#e58989"));
             valid = false;
+
+            // Prints message to notify the user of the error
+            Toast.makeText(getBaseContext(),"Please choose a starting time" ,
+                    Toast.LENGTH_LONG).show();
         } else {
             try {
                 sdf.parse(startTime.getText().toString());
             } catch (ParseException e) {
                 startTime.setBackgroundColor(Color.parseColor("#e58989"));
                 valid = false;
+
+                // Prints message to notify the user of the error
+                Toast.makeText(getBaseContext(),"Please choose a starting time" ,
+                        Toast.LENGTH_LONG).show();
             }
         }
 
@@ -226,12 +238,20 @@ public class CreateEventActivity extends AppCompatActivity {
         if (endTime.getText().toString().isEmpty()) {
             endTime.setBackgroundColor(Color.parseColor("#e58989"));
             valid = false;
+
+            // Prints message to notify the user of the error
+            Toast.makeText(getBaseContext(),"Please choose an ending time" ,
+                    Toast.LENGTH_LONG).show();
         } else {
             try {
                 sdf.parse(endTime.getText().toString());
             } catch (ParseException e) {
                 endTime.setBackgroundColor(Color.parseColor("#e58989"));
                 valid = false;
+
+                // Prints message to notify the user of the error
+                Toast.makeText(getBaseContext(),"Please choose an ending time" ,
+                        Toast.LENGTH_LONG).show();
             }
         }
 
@@ -345,7 +365,13 @@ public class CreateEventActivity extends AppCompatActivity {
 
         if (endSecondsFromMidnight <= startSecondsFromMidnight) {
             endTime.setBackgroundColor(Color.parseColor("#e58989"));
+
+            // Prints message to notify the user of the error
+            Toast.makeText(getBaseContext(),"The starting time cannot be after the ending time" ,
+                    Toast.LENGTH_LONG).show();
+
             return -1;
+
         }
         return endSecondsFromMidnight - startSecondsFromMidnight;
     }
