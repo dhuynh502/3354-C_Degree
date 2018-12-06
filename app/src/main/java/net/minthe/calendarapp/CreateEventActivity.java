@@ -168,7 +168,7 @@ public class CreateEventActivity extends AppCompatActivity {
         Button deleteButton = new Button(this);
         deleteButton.setId(View.generateViewId());
         deleteButton.setText("Delete");
-        deleteButton.setBackgroundColor(Color.RED);
+        deleteButton.setBackgroundColor(Color.parseColor("#e05757"));
         ConstraintLayout.LayoutParams buttonParams = new ConstraintLayout.LayoutParams(submitButton.getLayoutParams());
         deleteButton.setLayoutParams(buttonParams);
         deleteButton.setOnClickListener(new View.OnClickListener() {
@@ -204,32 +204,32 @@ public class CreateEventActivity extends AppCompatActivity {
 
         // If the event name field is left blank then set the color to red; not valid
         if (eventName.getText().toString().isEmpty()) {
-            eventName.setBackgroundColor(Color.RED);
+            eventName.setBackgroundColor(Color.parseColor("#e58989"));
             valid = false;
         }
 
         // If the start time field is left blank then set the color to red; not valid
         if (startTime.getText().toString().isEmpty()) {
-            startTime.setBackgroundColor(Color.RED);
+            startTime.setBackgroundColor(Color.parseColor("#e58989"));
             valid = false;
         } else {
             try {
                 sdf.parse(startTime.getText().toString());
             } catch (ParseException e) {
-                startTime.setBackgroundColor(Color.RED);
+                startTime.setBackgroundColor(Color.parseColor("#e58989"));
                 valid = false;
             }
         }
 
         // If the end time field is left blank then set the color to red; not valid
         if (endTime.getText().toString().isEmpty()) {
-            endTime.setBackgroundColor(Color.RED);
+            endTime.setBackgroundColor(Color.parseColor("#e58989"));
             valid = false;
         } else {
             try {
                 sdf.parse(endTime.getText().toString());
             } catch (ParseException e) {
-                endTime.setBackgroundColor(Color.RED);
+                endTime.setBackgroundColor(Color.parseColor("#e58989"));
                 valid = false;
             }
         }
@@ -326,7 +326,7 @@ public class CreateEventActivity extends AppCompatActivity {
         long endSecondsFromMidnight = cal.get(Calendar.HOUR_OF_DAY) * 60 * 60 + cal.get(Calendar.MINUTE) * 60;
 
         if (endSecondsFromMidnight <= startSecondsFromMidnight) {
-            endTime.setBackgroundColor(Color.RED);
+            endTime.setBackgroundColor(Color.parseColor("#e58989"));
             return -1;
         }
         return endSecondsFromMidnight - startSecondsFromMidnight;
