@@ -301,7 +301,7 @@ public class CreateEventActivity extends AppCompatActivity {
         long start = date + secondsFromMidnight * 1000;
         long end = start + duration * 1000;
 
-        if (conflictsExist(start, end)) {
+        if (conflictsExist(start, end) && !edit) {
             Toast.makeText(getApplicationContext(), "Event conflicts exist.", Toast.LENGTH_SHORT).show();
             return;
         }
