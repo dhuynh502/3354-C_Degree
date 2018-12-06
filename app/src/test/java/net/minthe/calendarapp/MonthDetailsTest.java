@@ -44,13 +44,22 @@ public class MonthDetailsTest {
         int month = c.get(Calendar.MONTH); // months are numbered from JANUARY TO DECEMBER [0,11]
 
         MonthDetails md = new MonthDetails(c.getTimeInMillis());
-        assertEquals(month, md.getMonthName());
+        assertEquals(month, md.getMonth());
 
 
     }
 
     @Test
     public void testNumDays() {
+        Calendar c = GregorianCalendar.getInstance();
+        c.set(Calendar.YEAR, 2018);
+        c.set(Calendar.MONTH, Calendar.AUGUST);
+        c.set(Calendar.DAY_OF_MONTH, 28);
+        int month = c.get(Calendar.MONTH); // months are numbered from JANUARY TO DECEMBER [0,11]
+
+        int daysInMonth = c.getActualMaximum(Calendar.DAY_OF_MONTH); //days in MONTH
+        MonthDetails md = new MonthDetails(c.getTimeInMillis());
+        assertEquals(daysInMonth, md.getNumDays());
     }
 
     @Test
