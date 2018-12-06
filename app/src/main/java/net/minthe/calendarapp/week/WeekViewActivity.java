@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import net.minthe.calendarapp.R;
 import net.minthe.calendarapp.day.DayViewFragment;
@@ -11,6 +12,7 @@ import net.minthe.calendarapp.domain.AppDatabase;
 import net.minthe.calendarapp.domain.Event;
 import net.minthe.calendarapp.domain.MonthDetails;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -49,6 +51,13 @@ public class WeekViewActivity extends AppCompatActivity
         c.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
         day = c.get(Calendar.DAY_OF_MONTH);
 
+        String firstDateText = getDateText(c.getTimeInMillis());
+        c.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+        String endDateText = getDateText(c.getTimeInMillis());
+
+        TextView tv = findViewById(R.id.weekHeader);
+        tv.setText(firstDateText + " - " + endDateText);
+
         MonthDetails md = new MonthDetails(date);
 
         DayViewFragment.addHoursToLayout(layout);
@@ -67,6 +76,11 @@ public class WeekViewActivity extends AppCompatActivity
                     EVENT_WIDTH
             );
         }
+    }
+
+    private String getDateText(long date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("d MMM");
+        return sdf.format(new Date(date));
     }
 
     private void setNextAndPrevWeek() {
