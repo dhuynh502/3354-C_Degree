@@ -200,7 +200,7 @@ public class CreateEventActivity extends AppCompatActivity {
      *
      * @return boolean - whether or not the input is valid
      */
-    public boolean validate() {
+    private boolean validate() {
         boolean valid = true;
 
         // If the event name field is left blank then set the color to red; not valid
@@ -209,7 +209,7 @@ public class CreateEventActivity extends AppCompatActivity {
             valid = false;
 
             // Prints message to notify the user of the error
-            Toast.makeText(getBaseContext(),"Please fill out the event name" , Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Please fill out the event name", Toast.LENGTH_SHORT).show();
         }
 
         // If the start time field is left blank then set the color to red; not valid
@@ -218,7 +218,7 @@ public class CreateEventActivity extends AppCompatActivity {
             valid = false;
 
             // Prints message to notify the user of the error
-            Toast.makeText(getBaseContext(),"Please choose a starting time" , Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Please choose a starting time", Toast.LENGTH_SHORT).show();
         } else {
             try {
                 sdf.parse(startTime.getText().toString());
@@ -227,7 +227,7 @@ public class CreateEventActivity extends AppCompatActivity {
                 valid = false;
 
                 // Prints message to notify the user of the error
-                Toast.makeText(getBaseContext(),"Please choose a starting time" , Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Please choose a starting time", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -237,7 +237,7 @@ public class CreateEventActivity extends AppCompatActivity {
             valid = false;
 
             // Prints message to notify the user of the error
-            Toast.makeText(getBaseContext(),"Please choose an ending time" , Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Please choose an ending time", Toast.LENGTH_SHORT).show();
         } else {
             try {
                 sdf.parse(endTime.getText().toString());
@@ -246,7 +246,7 @@ public class CreateEventActivity extends AppCompatActivity {
                 valid = false;
 
                 // Prints message to notify the user of the error
-                Toast.makeText(getBaseContext(),"Please choose an ending time" , Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Please choose an ending time", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -290,6 +290,11 @@ public class CreateEventActivity extends AppCompatActivity {
         long secondsFromMidnight = getSecondsFromMidnight(startDate);
         long duration = getDurationSeconds(startDate, endDate);
         if (duration == -1) {
+
+            endTime.setBackgroundColor(Color.parseColor("#e58989"));
+            // Prints message to notify the user of the error
+            Toast.makeText(getApplicationContext(),"The starting time cannot be after the ending time", Toast.LENGTH_SHORT).show();
+
             return; // Passed invalid inputs to above function
         }
 
@@ -350,7 +355,7 @@ public class CreateEventActivity extends AppCompatActivity {
      * @return The duration between the two times in seconds. -1 if the
      * inputs are not valid
      */
-    private long getDurationSeconds(Date start, Date end) {
+    public long getDurationSeconds(Date start, Date end) {
         Calendar cal = GregorianCalendar.getInstance();
         cal.setTime(start);
         long startSecondsFromMidnight = getSecondsFromMidnight(start);
@@ -359,13 +364,8 @@ public class CreateEventActivity extends AppCompatActivity {
         long endSecondsFromMidnight = cal.get(Calendar.HOUR_OF_DAY) * 60 * 60 + cal.get(Calendar.MINUTE) * 60;
 
         if (endSecondsFromMidnight <= startSecondsFromMidnight) {
-            endTime.setBackgroundColor(Color.parseColor("#e58989"));
-
-            // Prints message to notify the user of the error
-            Toast.makeText(getBaseContext(),"The starting time cannot be after the ending time" , Toast.LENGTH_LONG).show();
 
             return -1;
-
         }
         return endSecondsFromMidnight - startSecondsFromMidnight;
     }
