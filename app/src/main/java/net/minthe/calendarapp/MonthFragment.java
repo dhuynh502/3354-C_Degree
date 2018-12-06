@@ -3,6 +3,7 @@ package net.minthe.calendarapp;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -137,8 +138,14 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
     static final int N_ROWS = 6;
     static final int N_COLS = 7;
 
+    /**
+     * Draw calendar using 
+     *
+     * @return boolean - whether or not the input is valid
+     */
     private void redraw() {
         TextView monthDate = this.getView().findViewById(R.id.monthDate);
+        monthDate.setGravity(Gravity.CENTER);
         monthDate.setText(monthName);
 
 
@@ -147,6 +154,7 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
 
         long monthStart = new MonthDetails(date).getMonthStart();
         EventListDetails listDetails = new EventListDetails(monthStart, mViewModel.eventList.getValue());
+
 
         for (int i = 0; i < N_ROWS; i++) {
             TableRow row = new TableRow(layout.getContext());
