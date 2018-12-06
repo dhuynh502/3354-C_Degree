@@ -200,7 +200,7 @@ public class CreateEventActivity extends AppCompatActivity {
      *
      * @return boolean - whether or not the input is valid
      */
-    private boolean validate() {
+    public boolean validate() {
         boolean valid = true;
 
         // If the event name field is left blank then set the color to red; not valid
@@ -209,8 +209,7 @@ public class CreateEventActivity extends AppCompatActivity {
             valid = false;
 
             // Prints message to notify the user of the error
-            Toast.makeText(getBaseContext(),"Please fill out the event name" ,
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(),"Please fill out the event name" , Toast.LENGTH_LONG).show();
         }
 
         // If the start time field is left blank then set the color to red; not valid
@@ -219,8 +218,7 @@ public class CreateEventActivity extends AppCompatActivity {
             valid = false;
 
             // Prints message to notify the user of the error
-            Toast.makeText(getBaseContext(),"Please choose a starting time" ,
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(),"Please choose a starting time" , Toast.LENGTH_LONG).show();
         } else {
             try {
                 sdf.parse(startTime.getText().toString());
@@ -229,8 +227,7 @@ public class CreateEventActivity extends AppCompatActivity {
                 valid = false;
 
                 // Prints message to notify the user of the error
-                Toast.makeText(getBaseContext(),"Please choose a starting time" ,
-                        Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(),"Please choose a starting time" , Toast.LENGTH_LONG).show();
             }
         }
 
@@ -240,8 +237,7 @@ public class CreateEventActivity extends AppCompatActivity {
             valid = false;
 
             // Prints message to notify the user of the error
-            Toast.makeText(getBaseContext(),"Please choose an ending time" ,
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(),"Please choose an ending time" , Toast.LENGTH_LONG).show();
         } else {
             try {
                 sdf.parse(endTime.getText().toString());
@@ -250,8 +246,7 @@ public class CreateEventActivity extends AppCompatActivity {
                 valid = false;
 
                 // Prints message to notify the user of the error
-                Toast.makeText(getBaseContext(),"Please choose an ending time" ,
-                        Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(),"Please choose an ending time" , Toast.LENGTH_LONG).show();
             }
         }
 
@@ -367,8 +362,7 @@ public class CreateEventActivity extends AppCompatActivity {
             endTime.setBackgroundColor(Color.parseColor("#e58989"));
 
             // Prints message to notify the user of the error
-            Toast.makeText(getBaseContext(),"The starting time cannot be after the ending time" ,
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(),"The starting time cannot be after the ending time" , Toast.LENGTH_LONG).show();
 
             return -1;
 
