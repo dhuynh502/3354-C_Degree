@@ -16,12 +16,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MonthViewActivity" />
-        <activity android:name=".DailyViewActivity" />
         <activity android:name=".CreateEventActivity" />
         <activity android:name=".EventListActivity" />
         <activity android:name=".CustomMonthView" />
-        <activity android:name=".WeekView"></activity>
+        <activity android:name=".WeekView" />
+        <activity android:name=".day.DayViewActivity"></activity>
     </application>
 
 </manifest>

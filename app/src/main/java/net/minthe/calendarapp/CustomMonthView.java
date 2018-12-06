@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import net.minthe.calendarapp.day.DayViewActivity;
 import net.minthe.calendarapp.domain.Event;
 import net.minthe.calendarapp.domain.MonthDetails;
 
@@ -66,6 +67,18 @@ public class CustomMonthView extends AppCompatActivity
         fm.beginTransaction()
                 .replace(R.id.monthFragContainer, monthFragment)
                 .commit();
+
+        TextView eventHeader = findViewById(R.id.eventHeader);
+        eventHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MonthDetails md = new MonthDetails(selectedDate);
+                Intent intent = new Intent(getApplicationContext(), DayViewActivity.class);
+                intent.putExtra("NET_MINTHE_CALENDARAPP_START_DATE", md.getDayStart(selectedDay));
+                intent.putExtra("NET_MINTHE_CALENDARAPP_END_DATE", md.getDayEnd(selectedDay));
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
