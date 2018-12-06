@@ -207,6 +207,10 @@ public class CreateEventActivity extends AppCompatActivity {
             eventName.setBackgroundColor(Color.parseColor("#e58989"));
             valid = false;
         }
+        if (eventName.getText().toString().trim().isEmpty()) {
+            eventName.setBackgroundColor(Color.parseColor("#e58989"));
+            valid = false;
+        }
 
         // If the start time field is left blank then set the color to red; not valid
         if (startTime.getText().toString().isEmpty()) {
