@@ -203,10 +203,6 @@ public class CreateEventActivity extends AppCompatActivity {
         boolean valid = true;
 
         // If the event name field is left blank then set the color to red; not valid
-        if (eventName.getText().toString().isEmpty()) {
-            eventName.setBackgroundColor(Color.parseColor("#e58989"));
-            valid = false;
-        }
         if (eventName.getText().toString().trim().isEmpty()) {
             eventName.setBackgroundColor(Color.parseColor("#e58989"));
             valid = false;
