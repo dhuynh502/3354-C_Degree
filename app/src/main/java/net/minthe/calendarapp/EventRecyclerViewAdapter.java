@@ -41,8 +41,8 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         Event event = mValues.get(position);
         holder.mItem = event;
         holder.mIdView.setText(event.getEventName());
-        String content = event.getDateTime().toString() + ":"
-                + Long.toString(event.getDuration() / 60) + ":"
+        String content = event.getDateTime().toString() + " : "
+                /*+ Long.toString(event.getDuration() / 60) + ":"*/
                 + event.getNotes();
         holder.mContentView.setText(content);
 
