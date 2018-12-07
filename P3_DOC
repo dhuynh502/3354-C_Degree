@@ -6,7 +6,7 @@
 (ii) Test Classes and Location
 
      Michael - MonthDetailsTest -> app/src/test/java/net/minthe/calendarapp/MonthDetailsTest
-     Duc - 
+     Duc - EventListDetailsTest -> app/src/test/java/net/minthe/calendarapp/EventListDetailsTest
      Kristie - CreateEventTest -> app/src/test/java/net/minthe/calendarapp/CreateEventTest
      Jay - 
      
@@ -22,7 +22,10 @@
       1.0 Basic calendar
           1.1 Monthly view: Shows each month with colored days for events
               1.1.1 Add events from monthly view
+              1.1.2 Update or delete events from monthly view by selecting the event from the event list
           1.2 Agenda view: Chronological list of events starting from the current day
               1.2.1 Update or delete events from agenda view
+          1.3 Weekly view: Shows each week with colored segments for events and their duration
+          
 
 
