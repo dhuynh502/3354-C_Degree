@@ -20,11 +20,15 @@ import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+/**
+ * Class to show the week view
+ *
+ */
 public class WeekViewActivity extends AppCompatActivity
         implements DayViewFragment.OnFragmentInteractionListener {
 
+    // Declare variables
     private static final int EVENT_WIDTH = 135;
-
     private long date;
     int day;
     private long nextWeek;
@@ -40,6 +44,12 @@ public class WeekViewActivity extends AppCompatActivity
         setDate(GregorianCalendar.getInstance().getTimeInMillis());
     }
 
+
+    /**
+     * Method to set the dates of the week view
+     *
+     * @param newDate stores the date
+     */
     private void setDate(long newDate) {
         RelativeLayout layout = findViewById(R.id.weekLayout);
         layout.removeAllViews();
@@ -62,6 +72,7 @@ public class WeekViewActivity extends AppCompatActivity
 
         DayViewFragment.addHoursToLayout(layout);
 
+        // Populate days with events
         for (int i = 0; i < 7; i++) {
             List<Event> dayEvents = AppDatabase.getInstance().eventDao().findEventsBetween(
                     md.getDayStart(day + i),
@@ -78,11 +89,21 @@ public class WeekViewActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Method to format the date
+     *
+     * @param date stores date
+     * @return formatted date
+     */
     private String getDateText(long date) {
         SimpleDateFormat sdf = new SimpleDateFormat("d MMM");
         return sdf.format(new Date(date));
     }
 
+    /**
+     * Method to set the weeks before and after the currently selected week
+     *
+     */
     private void setNextAndPrevWeek() {
         Calendar c = GregorianCalendar.getInstance();
         c.clear();
@@ -96,10 +117,20 @@ public class WeekViewActivity extends AppCompatActivity
         nextWeek = c.getTimeInMillis();
     }
 
+    /**
+     * Method to change to the next week
+     *
+     * @param v the current view
+     */
     public void gotoNext(View v) {
         setDate(nextWeek);
     }
 
+    /**
+     * Method to change to the previous week
+     *
+     * @param v the current view
+     */
     public void gotoPrev(View v) {
         setDate(prevWeek);
     }
