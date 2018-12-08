@@ -8,6 +8,10 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
+/**
+ * Class to insert events into database
+ *
+ */
 @Dao
 public interface EventDao {
     @Query("SELECT * FROM event " +

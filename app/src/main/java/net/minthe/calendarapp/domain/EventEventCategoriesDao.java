@@ -6,6 +6,10 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
+/**
+ * Class to insert event categories into database
+ *
+ */
 @Dao
 public interface EventEventCategoriesDao {
     @Insert

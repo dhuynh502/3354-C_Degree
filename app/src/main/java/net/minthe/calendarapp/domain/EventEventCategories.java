@@ -5,6 +5,10 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 
+/**
+ * Class to handle event categories
+ *
+ */
 @Entity(tableName = "event_event_categories",
         primaryKeys = {"event_id", "category_id"},
         indices = {@Index("event_id"), @Index("category_id")},

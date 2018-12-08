@@ -9,6 +9,11 @@ import androidx.room.TypeConverters;
 
 @Database(entities = {Event.class, EventCategory.class, EventEventCategories.class}, version = 2)
 @TypeConverters({Converters.class})
+
+/**
+ * Class to handle database functionality for event storage
+ *
+ */
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase ourInstance = null;
 

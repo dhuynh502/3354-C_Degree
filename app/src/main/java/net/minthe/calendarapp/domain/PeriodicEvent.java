@@ -4,6 +4,10 @@ import java.time.DayOfWeek;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Class to handle periodic events
+ *
+ */
 public class PeriodicEvent extends Event {
     private List<DayOfWeek> days;
 
