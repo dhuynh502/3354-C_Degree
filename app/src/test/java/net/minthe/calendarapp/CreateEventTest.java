@@ -13,6 +13,11 @@ import java.util.Date;
 
 import static org.junit.Assert.*;
 
+/**
+ * Test class to test the getDurationSeconds method in the CreateEventActivity class
+ * Created by Kristie
+ *
+ */
 public class CreateEventTest {
 
     CreateEventActivity createEventTest;

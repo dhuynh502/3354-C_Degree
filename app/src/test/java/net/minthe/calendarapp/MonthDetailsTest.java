@@ -9,6 +9,12 @@ import java.util.GregorianCalendar;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Test class to test the several methods dealing with month details
+ * Created by Michael
+ *
+ */
+
 public class MonthDetailsTest {
 
     @Test

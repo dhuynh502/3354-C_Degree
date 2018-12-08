@@ -9,6 +9,11 @@ import java.util.GregorianCalendar;
 
 import static org.junit.Assert.*;
 
+/**
+ * Test class to test the getEventsForDay method
+ * Created by Duc
+ *
+ */
 public class EventListDetailsTest {
 
     @Test
