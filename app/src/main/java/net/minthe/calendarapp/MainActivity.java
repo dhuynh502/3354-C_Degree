@@ -8,6 +8,10 @@ import net.minthe.calendarapp.week.WeekViewActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+/**
+ * Class to show the main screen of the app
+ *
+ */
 public class MainActivity extends AppCompatActivity {
 
     @Override

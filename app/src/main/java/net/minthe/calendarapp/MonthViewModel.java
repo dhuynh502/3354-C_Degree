@@ -7,6 +7,10 @@ import java.util.List;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+/**
+ * Class to populate the month view
+ *
+ */
 public class MonthViewModel extends ViewModel {
     public final MutableLiveData<List<Event>> eventList = new MutableLiveData<>();
     public final MutableLiveData<Long> date = new MutableLiveData<>();

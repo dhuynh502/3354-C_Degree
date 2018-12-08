@@ -25,6 +25,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+/**
+ * Fragment class to add information to the month view
+ *
+ */
 public class MonthFragment extends Fragment implements View.OnClickListener {
 
     // Declare Variables

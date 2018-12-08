@@ -12,8 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 /**
- * This is a temporary activity meant to be used during development to ensure that
- * events are persisting correctly.
+ * Class to show the list of events
+ *
  */
 public class EventListActivity extends AppCompatActivity implements EventFragment.OnListFragmentInteractionListener {
 

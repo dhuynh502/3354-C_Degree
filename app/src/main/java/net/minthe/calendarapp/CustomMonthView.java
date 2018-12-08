@@ -16,6 +16,10 @@ import java.util.GregorianCalendar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+/**
+ * Class to handle month view layout
+ *
+ */
 public class CustomMonthView extends AppCompatActivity
         implements EventFragment.OnListFragmentInteractionListener {
 
