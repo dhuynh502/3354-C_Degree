@@ -1,7 +1,14 @@
 package net.minthe.calendarapp;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,6 +33,7 @@ import java.util.Locale;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.core.app.NotificationCompat;
 
 // Class to handle event creation
 public class CreateEventActivity extends AppCompatActivity {
@@ -39,6 +47,11 @@ public class CreateEventActivity extends AppCompatActivity {
 
     long id;
     boolean edit;
+
+
+    int hours;
+    int minutes;
+
 
     static SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aaa", Locale.US);
 
@@ -59,6 +72,15 @@ public class CreateEventActivity extends AppCompatActivity {
                 TimePickerDialog timePickerDialog = new TimePickerDialog(CreateEventActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timepicker, int hourOfDay, int minute) {
+
+                        if(android.os.Build.VERSION.SDK_INT >= 23) {
+                            hours = timepicker.getHour();
+                            minutes = timepicker.getMinute();
+                        } else {
+                            hours = timepicker.getCurrentHour();
+                            minutes = timepicker.getCurrentMinute();
+                        }
+
 
                         // Determines whether to display AM or PM
                         if (hourOfDay >= 12) {
@@ -251,8 +273,127 @@ public class CreateEventActivity extends AppCompatActivity {
         }
 
         // Otherwise the input is valid
+        notificationSetter();
         return valid;
     }
+
+    public void notificationSetter() {
+        String eName = eventName.getText().toString();
+        String start = startTime.getText().toString();
+        String end = endTime.getText().toString();
+
+
+        String CHANNEL_ID = "my_channel_01";
+        CharSequence name = "my_channel";
+        String Description = "This is my channel";
+
+        int NOTIFICATION_ID = 234;
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
+            mChannel.setDescription(Description);
+            mChannel.enableLights(true);
+            mChannel.setLightColor(Color.RED);
+            mChannel.enableVibration(true);
+            mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+            mChannel.setShowBadge(true);
+
+            if (notificationManager != null) {
+
+                notificationManager.createNotificationChannel(mChannel);
+            }
+
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH),
+                hours,
+                minutes,
+                0
+        );
+
+        setAlarm(calendar.getTimeInMillis());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       /* Intent resultIntent = new Intent(this, NotificationRecieverActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(NotificationRecieverActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("Event Reminder")
+                .setContentText("Your event is starting")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(resultPendingIntent)
+                .setAutoCancel(true);
+
+        if (notificationManager != null) {
+
+            notificationManager.notify(NOTIFICATION_ID, builder.build());
+        }*/
+    }
+
+    private void setAlarm(long timeinMillis) {
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        Intent intent = new Intent(this, MyAlarm.class);
+        //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+
+        //message to say alarm is set
+        Toast.makeText(getApplicationContext(), "Alarm set", Toast.LENGTH_SHORT).show();
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Button callback for the Delete button
@@ -314,11 +455,12 @@ public class CreateEventActivity extends AppCompatActivity {
                 notes.getText().toString()
         );
 
-        if (edit) { // Are we creating or updating?
+        // Update event
+        if (edit) {
             event.setEventId(id);
             new EventUpdateTask(this, event)
                     .execute();
-
+        // Create new event
         } else {
             new EventInsertionTask(this, event)
                     .execute();
