@@ -31,8 +31,9 @@ import androidx.fragment.app.Fragment;
  * create an instance of this fragment.
  */
 public class DayViewFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    // Declare variables
+
+    // The fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "dayview-start-timestamp";
     private static final String ARG_PARAM2 = "dayview-end-timestamp";
     private static final String ARG_PARAM3 = "dayview-event-width";
@@ -49,8 +50,9 @@ public class DayViewFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    // Required empty public constructor
     public DayViewFragment() {
-        // Required empty public constructor
+
     }
 
     /**
@@ -61,7 +63,6 @@ public class DayViewFragment extends Fragment {
      * @param end   Parameter 2.
      * @return A new instance of fragment DayViewFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static DayViewFragment newInstance(long start, long end, int eventWidth, boolean displayHours) {
         DayViewFragment fragment = new DayViewFragment();
         Bundle args = new Bundle();
@@ -102,6 +103,14 @@ public class DayViewFragment extends Fragment {
         return v;
     }
 
+    /**
+     * Method to add events to the day view
+     *
+     * @param layout layout of the daily view
+     * @param events list of events
+     * @param leftOffset offset events from the left
+     * @param eventWidth width of the events
+     */
     public static void addEventsToLayout(RelativeLayout layout, List<Event> events, int leftOffset, int eventWidth) {
         for (Event e : events) {
             Calendar c = GregorianCalendar.getInstance();
@@ -125,6 +134,11 @@ public class DayViewFragment extends Fragment {
         }
     }
 
+    /**
+     * Method to add the hours to the daily view layout
+     *
+     * @param layout layout of the daily view
+     */
     public static void addHoursToLayout(RelativeLayout layout) {
         for (int i = 0; i < 24; i++) {
             TextView hour = new TextView(layout.getContext());
