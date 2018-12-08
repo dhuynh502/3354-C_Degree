@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import net.minthe.calendarapp.day.DayViewActivity;
 import net.minthe.calendarapp.week.WeekViewActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -51,17 +50,6 @@ public class MainActivity extends AppCompatActivity {
      */
     public void onWeekView(View view) {
         Intent intent = new Intent(this, WeekViewActivity.class);
-        startActivity(intent);
-    }
-
-    /**
-     * Daily view button
-     * Calls the WeekViewActivity
-     *
-     * @param view - contains the selected view
-     */
-    public void onDayView(View view) {
-        Intent intent = new Intent(this, DayViewActivity.class);
         startActivity(intent);
     }
 }

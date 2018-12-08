@@ -1,6 +1,7 @@
 package net.minthe.calendarapp.day;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import net.minthe.calendarapp.CreateEventActivity;
 import net.minthe.calendarapp.R;
 import net.minthe.calendarapp.domain.AppDatabase;
 import net.minthe.calendarapp.domain.Event;
@@ -98,7 +100,7 @@ public class DayViewFragment extends Fragment {
 
         addHoursToLayout(layout);
 
-        addEventsToLayout(layout, events, HOUR_WIDTH + HOUR_MARGIN, eventWidth);
+        addEventsToLayout(getContext(), layout, events, HOUR_WIDTH + HOUR_MARGIN, eventWidth);
 
         return v;
     }
@@ -106,13 +108,13 @@ public class DayViewFragment extends Fragment {
     /**
      * Method to add events to the day view
      *
-     * @param layout layout of the daily view
-     * @param events list of events
+     * @param layout     layout of the daily view
+     * @param events     list of events
      * @param leftOffset offset events from the left
      * @param eventWidth width of the events
      */
-    public static void addEventsToLayout(RelativeLayout layout, List<Event> events, int leftOffset, int eventWidth) {
-        for (Event e : events) {
+    public static void addEventsToLayout(final Context context, RelativeLayout layout, List<Event> events, int leftOffset, int eventWidth) {
+        for (final Event e : events) {
             Calendar c = GregorianCalendar.getInstance();
             c.setTime(e.getDateTime());
 
@@ -123,6 +125,8 @@ public class DayViewFragment extends Fragment {
             eventText.setGravity(Gravity.CENTER);
             eventText.setBackgroundColor(Color.parseColor("#e05757"));
 
+            addEditActivityClickHandler(eventText, context, e);
+
             RelativeLayout.LayoutParams eventParams =
                     new RelativeLayout.LayoutParams(eventWidth, (int) (PIXELS_PER_HOUR * sizeMultiplier));
             eventParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
@@ -132,6 +136,27 @@ public class DayViewFragment extends Fragment {
             eventText.setLayoutParams(eventParams);
             layout.addView(eventText);
         }
+    }
+
+    private static void addEditActivityClickHandler(View button, final Context context, final Event event) {
+        Calendar c = GregorianCalendar.getInstance();
+        c.setTime(event.getDateTime());
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+
+        final long date = c.getTimeInMillis();
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, CreateEventActivity.class);
+                intent.putExtra("NET_MINTHE_CALENDARAPP_SELECTED_DATE", date);
+                intent.putExtra("NET_MINTHE_CALENDARAPP_EDIT_MODE", true);
+                intent.putExtra("NET_MINTHE_CALENDARAPP_EVENT_ID", event.getEventId());
+                context.startActivity(intent);
+            }
+        });
     }
 
     /**

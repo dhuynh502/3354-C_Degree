@@ -26,7 +26,43 @@
           1.2 Agenda view: Chronological list of events starting from the current day
               1.2.1 Update or delete events from agenda view
           1.3 Weekly view: Shows each week with colored segments for events and their duration
+              1.3.1 Update or delete events from weekly view
           1.4 Daily view: Shows each day
-          
+              1.4.1 Update or delete events from daily view
+          1.5 Conflict Checking
+              1.5.1 Overlapping events cannot be created. There are some bugs in the implementation.
 
+      Instructions:
+
+      The agenda, week, and month views can be accessed from the main page of the app.
+
+      Month View:
+          Click on a date to see all events on that date. Add an event to a particular date
+          by clicking the "Add Event" button after selecting the desired date.
+
+          Events can be edited or deleted by clicking on them in the list under the calendar
+          view. Any changes will be reflected immediately.
+
+          Navigate through months with the "Prev" and "Next" buttons on the top.
+
+          Day View:
+              To see the events for a day in an hourly format, click the text in the month
+              view that says (for example) "Events on 1 December 2018". This is under the calendar
+              and above the event list.
+
+              Events can be edited or deleted by clicking on them. Any changes will not appear
+              immediately (exit/reenter), and there are edge cases that may cause crashes.
+
+      Week View:
+          Events can be edited or deleted by clicking on them. Any changes will not appear
+          immediately (exit/reenter), and there are edge cases that may cause crashes.
+
+          Navigate through weeks with the "Prev" and "Next" buttons on the top.
+
+      Agenda View:
+          This view shows all events from the current instant in time forward, sorted
+          chronologically.
+
+          Events can be edited or deleted by clicking on them. Any changes will be reflected
+          immediately.
 

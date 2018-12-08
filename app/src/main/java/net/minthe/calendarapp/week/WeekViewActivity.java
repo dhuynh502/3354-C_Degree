@@ -80,6 +80,7 @@ public class WeekViewActivity extends AppCompatActivity
             );
 
             DayViewFragment.addEventsToLayout(
+                    this,
                     layout,
                     dayEvents,
                     DayViewFragment.HOUR_WIDTH + DayViewFragment.HOUR_MARGIN +
