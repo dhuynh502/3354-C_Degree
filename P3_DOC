@@ -1,7 +1,7 @@
 (i)	Design Pattern and Code Location
 
     Singleton design pattern used for the database
-    Located at app/src/main/app/src/main/java/net/minthe/calendarapp/CreateEventActivity (lines 350 -354)
+    Located at app/src/main/app/src/main/java/net/minthe/calendarapp/CreateEventActivity (lines 412 - 417)
 
 (ii) Test Classes and Location
 
